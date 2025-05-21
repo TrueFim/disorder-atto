@@ -10,7 +10,7 @@
 #SBATCH --partition=general
 #SBATCH --time=24:00:00
 #SBATCH --mail-type=END,FAIL # Mail notifications
-#SBATCH --nodes=1
+#SBATCH --nodes=3
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=72
 #SBATCH --output=slurm_logs/sim_array_%A_%a.out  # Standard output and error log (%A: JobID, %a: TaskID)
