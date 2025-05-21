@@ -83,23 +83,23 @@ echo SLURM_JOB_NUM_NODES = $SLURM_JOB_NUM_NODES
 echo OMP_NUM_THREADS = $OMP_NUM_THREADS
 cp ../Si_rps.dat .
 
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_gs_*.inp > OUTPUT_DFT.txt
-if [ $? -ne 0 -o ! -f "OUTPUT_DFT.txt" ]; then
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_gs_*.inp > OUTPUT_DFT.out
+if [ $? -ne 0 -o ! -f "OUTPUT_DFT.out" ]; then
   echo "Error: the ground-state calculation failed."
   rm Si_rps.dat
   exit 1
 fi
 
-if grep -q "$search_string" OUTPUT_DFT.txt; then
+if grep -q "does not converged" OUTPUT_DFT.out; then
   echo "Error: the ground-state calculation failed to converge"
   rm Si_rps.dat
   exit 1
 fi
 
 mv data_for_restart restart
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_response_rt_pulse_*.inp > OUTPUT_linear_response.txt
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_weak_rt_pulse_*.inp > OUTPUT_weak_pulse.txt
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_rt_pulse_*.inp > OUTPUT_strong_pulse.txt
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_response_rt_pulse_*.inp > OUTPUT_linear_response.out
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_weak_rt_pulse_*.inp > OUTPUT_weak_pulse.out
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_rt_pulse_*.inp > OUTPUT_strong_pulse.out
 
 rm Si_rps.dat
 rm -rf restart
