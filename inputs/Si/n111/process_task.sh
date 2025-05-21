@@ -87,7 +87,6 @@ srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_gs_*.inp > OUTPUT_DFT.txt
 if [ $? -ne 0 -o ! -f "OUTPUT_DFT.txt" ]; then
   echo "Error: the ground-state calculation failed."
   rm Si_rps.dat
-  rm -rf data_for_restart
   exit 1
 fi
 
