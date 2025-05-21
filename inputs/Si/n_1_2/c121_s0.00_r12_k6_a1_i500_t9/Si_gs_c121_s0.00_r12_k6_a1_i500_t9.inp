@@ -60,8 +60,7 @@
 
 &functional
   !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
-  xc = 'TBmBJ'
-  cval = 1.04
+  xc = 'PZ'
 /
 
 &rgrid
