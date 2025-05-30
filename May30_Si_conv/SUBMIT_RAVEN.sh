@@ -4,7 +4,7 @@
 # PLEASE REVISE "#SBATCH --array" BEFORE SUBMITTING THE JOB ARRAY!
 
 # --- SLURM Directives ---
-#SBATCH --array=1-6 # Here, 1 is the first index (not zero)!
+#SBATCH --array=1-96 # Here, 1 is the first index (not zero)!
 #SBATCH --job-name=salmon
 #SBATCH --chdir="./"
 #SBATCH --partition=general
