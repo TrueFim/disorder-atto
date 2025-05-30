@@ -1,0 +1,158 @@
+!########################################################################################!
+! Excercise 04: Ground state of crystalline silicon(periodic solids)                     !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'dft'
+/
+
+&control
+  !common name of output files
+  sysname = 'gs'
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 10.86d0, 10.86d0, 10.86d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 64
+  nelec  = 256
+  nstate = 512
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to &atomic_reduced_coordinates. !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 36, 36, 36
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 4, 4, 4
+/
+
+&scf
+  !maximum number of scf iteration and threshold of convergence
+  nscf      = 500
+  threshold = 1.0d-9
+/
+
+&atomic_red_coor
+  'Si'    0.000    0.000    0.000    1
+  'Si'    0.211    0.105    0.148    1
+  'Si'    0.212    0.062    0.346    1
+  'Si'    0.002    0.210    0.216    1
+  'Si'    0.264    0.205    0.000    1
+  'Si'    0.395    0.146    0.386    1
+  'Si'    0.099    0.339    0.426    1
+  'Si'    0.392    0.433    0.148    1
+
+  'Si'    0.051    0.000    0.558    1
+  'Si'    0.141    0.131    0.594    1
+  'Si'    0.244    0.000    0.729    1
+  'Si'    0.000    0.231    0.743    1
+  'Si'    0.237    0.331    0.468    1
+  'Si'    0.411    0.125    0.914    1
+  'Si'    0.128    0.408    0.901    1
+  'Si'    0.440    0.452    0.684    1
+
+  'Si'    0.000    0.429    0.000    1
+  'Si'    0.191    0.607    0.125    1
+  'Si'    0.321    0.501    0.164    1
+  'Si'    0.000    0.781    0.339    1
+  'Si'    0.237    0.801    0.014    1
+  'Si'    0.445    0.581    0.387    1
+  'Si'    0.225    0.852    0.409    1
+  'Si'    0.413    0.904    0.192    1
+
+  'Si'    0.092    0.466    0.541    1
+  'Si'    0.107    0.625    0.617    1
+  'Si'    0.254    0.509    0.841    1
+  'Si'    0.000    0.688    0.750    1
+  'Si'    0.186    0.792    0.559    1
+  'Si'    0.361    0.561    0.838    1
+  'Si'    0.202    0.901    0.865    1
+  'Si'    0.311    0.813    0.612    1
+
+  'Si'    0.525    0.051    0.000    1
+  'Si'    0.603    0.117    0.166    1
+  'Si'    0.727    0.000    0.264    1
+  'Si'    0.441    0.252    0.225    1
+  'Si'    0.767    0.350    0.013    1
+  'Si'    0.935    0.165    0.365    1
+  'Si'    0.545    0.277    0.446    1
+  'Si'    0.875    0.385    0.122    1
+
+  'Si'    0.518    0.000    0.567    1
+  'Si'    0.614    0.197    0.617    1
+  'Si'    0.805    0.000    0.734    1
+  'Si'    0.519    0.242    0.749    1
+  'Si'    0.825    0.277    0.507    1
+  'Si'    0.905    0.164    0.898    1
+  'Si'    0.653    0.426    0.854    1
+  'Si'    0.858    0.376    0.597    1
+
+  'Si'    0.514    0.509    0.000    1
+  'Si'    0.630    0.595    0.192    1
+  'Si'    0.715    0.430    0.191    1
+  'Si'    0.539    0.770    0.185    1
+  'Si'    0.734    0.752    0.004    1
+  'Si'    0.896    0.604    0.304    1
+  'Si'    0.683    0.848    0.387    1
+  'Si'    0.845    0.914    0.149    1
+
+  'Si'    0.503    0.493    0.493    1
+  'Si'    0.551    0.649    0.631    1
+  'Si'    0.801    0.572    0.815    1
+  'Si'    0.493    0.755    0.761    1
+  'Si'    0.728    0.850    0.600    1
+  'Si'    0.855    0.707    0.841    1
+  'Si'    0.642    0.869    0.786    1
+  'Si'    0.875    0.875    0.675    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/
