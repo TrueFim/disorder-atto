@@ -1,0 +1,165 @@
+!########################################################################################!
+! Excercise 06: Electron dynamics in crystalline silicon under a pulsed electric field   !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!----------------------------------------------------------------------------------------!
+! * Copy the ground state data directory('data_for_restart') (or make symbolic link)     !
+!   calculated in 'samples/exercise_04_bulkSi_gs/' and rename the directory to 'restart/'!
+!   in the current directory.                                                            !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'tddft_pulse'
+/
+
+&control
+  !common name of output files
+  sysname = 'pulse_1e12'
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  !use ScaLAPACK for diagonalization (makes sence only with nproc_ob greater than 1)
+  yn_scalapack = 'y'
+  
+  nproc_k=12
+  nproc_ob=2
+  nproc_rgrid=1,1,1
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 10.86d0, 10.86d0, 5.43d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 32
+  nelec  = 128
+  nstate = 192
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to   &atomic_reduced_coord.     !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 36, 36, 18
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 4, 4, 8
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.002d0
+  nt = 9000
+/
+
+&emfield
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape1 = 'Acos2'
+  
+  !peak intensity(W/cm^2) of the incident pulse
+  I_wcm2_1 = 1.0d12
+  
+  !duration of the incident pulse
+  tw1 = 10.672d0
+  
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega1 = 1.55d0
+  
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 0.0d0, 0.0d0, 1.0d0
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 3000
+/
+
+&atomic_red_coor
+  'Si'    0.000    0.000    0.000    1
+  'Si'    0.211    0.180    0.333    1
+  'Si'    0.279    0.000    0.464    1
+  'Si'    0.000    0.267    0.492    1
+  'Si'    0.326    0.294    0.000    1
+  'Si'    0.305    0.166    0.773    1
+  'Si'    0.110    0.318    0.698    1
+  'Si'    0.313    0.353    0.206    1
+
+  'Si'    0.000    0.452    0.000    1
+  'Si'    0.138    0.607    0.296    1
+  'Si'    0.236    0.535    0.366    1
+  'Si'    0.000    0.850    0.566    1
+  'Si'    0.150    0.803    0.000    1
+  'Si'    0.413    0.719    0.702    1
+  'Si'    0.113    0.849    0.777    1
+  'Si'    0.380    0.775    0.432    1
+
+  'Si'    0.400    0.000    0.000    1
+  'Si'    0.566    0.193    0.196    1
+  'Si'    0.828    0.000    0.374    1
+  'Si'    0.450    0.261    0.574    1
+  'Si'    0.759    0.302    0.000    1
+  'Si'    0.775    0.199    0.578    1
+  'Si'    0.565    0.403    0.672    1
+  'Si'    0.868    0.372    0.261    1
+
+  'Si'    0.466    0.530    0.000    1
+  'Si'    0.608    0.591    0.108    1
+  'Si'    0.745    0.583    0.640    1
+  'Si'    0.486    0.782    0.516    1
+  'Si'    0.796    0.809    0.000    1
+  'Si'    0.902    0.625    0.607    1
+  'Si'    0.601    0.840    0.950    1
+  'Si'    0.875    0.795    0.415    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/
