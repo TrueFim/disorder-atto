@@ -81,18 +81,21 @@ export OMP_PLACES=cores
 
 echo SLURM_JOB_NUM_NODES = $SLURM_JOB_NUM_NODES
 echo OMP_NUM_THREADS = $OMP_NUM_THREADS
-cp ../Si_rps.dat .
+cp ../Si.psp8 .
+cp ../O.psp8 .
 
 srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_gs_*.inp > OUTPUT_DFT.out
 if [ $? -ne 0 -o ! -f "OUTPUT_DFT.out" ]; then
   echo "Error: the ground-state calculation failed."
-  rm Si_rps.dat
+  rm Si.psp8
+  rm O.psp8
   exit 1
 fi
 
 if grep -q "does not converged" OUTPUT_DFT.out; then
   echo "Error: the ground-state calculation failed to converge"
-  rm Si_rps.dat
+  rm Si.psp8
+  rm O.psp8
   exit 1
 fi
 
@@ -101,7 +104,8 @@ srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_weak_rt_pulse_*.inp > OUT
 srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_rt_pulse_*.inp > OUTPUT_strong_pulse.out
 srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_response_rt_pulse_*.inp > OUTPUT_linear_response.out
 
-rm Si_rps.dat
+rm Si.psp8
+rm O.psp8
 rm -rf restart
 
 echo "--- Task $TASK_ID completed for folder $TARGET_FOLDER ---"
