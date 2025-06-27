@@ -97,9 +97,9 @@ if grep -q "does not converged" OUTPUT_DFT.out; then
 fi
 
 mv data_for_restart restart
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_weak_rt_pulse_*.inp > OUTPUT_weak_pulse.out
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_rt_pulse_*.inp > OUTPUT_strong_pulse.out
-srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < Si_response_rt_pulse_*.inp > OUTPUT_linear_response.out
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_weak_rt_pulse_*.inp > OUTPUT_weak_pulse.out
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_rt_pulse_*.inp > OUTPUT_strong_pulse.out
+srun -n $SLURM_JOB_NUM_NODES ~/local/bin/salmon < SiO2_response_rt_pulse_*.inp > OUTPUT_linear_response.out
 
 rm Si_rps.dat
 rm -rf restart
