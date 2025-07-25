@@ -804,22 +804,22 @@ def plot_nonlinear_response_v5_averaging_disorder(folders_dict, ax):
     plt.suptitle(' '.join(re.split('[/_]', str1))+' averaged over '+ str(len(folders_dict[keys[0]])) +' calc.', fontsize=14, y=0.99)
 
 
-    alpha0 = 0.5
+    alpha0 = 0.75
     num_keys = len(keys)
 
-    colors2 = colors('c', 'r', num_keys)
+    colors2 = colors('b', 'r', num_keys)
 
-    colors3 = colors('r', 'magenta', num_keys)
-    colors4 = colors('magenta', 'r', num_keys)
+    colors3 = colors('b', 'r', num_keys)
+    colors4 = colors('b', 'r', num_keys)
 
-    colors5 = colors('blue', 'black', num_keys)
-    colors6 = colors('black', 'blue', num_keys)
+    colors5 = colors('b', 'r', num_keys)
+    colors6 = colors('b', 'r', num_keys)
 
-    colors7 = colors('#DC143C', '#00FF7F', num_keys)
-    colors8 = colors('#00FF7F', '#DC143C', num_keys)
+    colors7 = colors('b', 'r', num_keys)
+    colors8 = colors('b', 'r', num_keys)
 
-    colors9 = colors('#00BFFF', '#FF007F', num_keys)
-    colors10 = colors('#FF007F', '#00BFFF', num_keys)
+    colors9 = colors('b', 'r', num_keys)
+    colors10 = colors('b', 'r', num_keys)
 
 
     for j, key in enumerate(keys):
