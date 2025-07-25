@@ -19,7 +19,7 @@ from itertools import product
 from matplotlib.colors import LinearSegmentedColormap
 
 # # Полностью отключить все предупреждения
-# warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore")
 
 os.makedirs("ims", exist_ok=True)
 # os.makedirs("ims/current", exist_ok=True)
