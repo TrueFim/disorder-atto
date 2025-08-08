@@ -798,7 +798,7 @@ def plot_nonlinear_response_v5_averaging_disorder(folders_dict, ax):
 
     keys = sorted(list(folders_dict.keys()))
 
-    str1 = re.sub(r's[^_]+_', '', folders_dict[keys[0]][0])
+    str1 = re.sub(r'c[^_]+_', '', folders_dict[keys[0]][0])
 
     # Построим графики
     plt.figure(figsize=(10, 10))    
@@ -1911,7 +1911,7 @@ def plot_nonlinear_response_v8_averaging_disorder_final_en(folders_dict, ax):
     keys = sorted(list(folders_dict.keys()))
     keys_names = ['cell ' + str(k) for k in keys]
 
-    str1 = re.sub(r's[^_]+_', '', folders_dict[keys[0]][0])
+    str1 = re.sub(r'c[^_]+_', '', folders_dict[keys[0]][0])
 
     # Построим графики
     plt.figure(figsize=(10, 5))    
