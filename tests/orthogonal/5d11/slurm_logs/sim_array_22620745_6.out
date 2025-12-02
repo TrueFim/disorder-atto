@@ -1,0 +1,43 @@
+Looking for simulation folders in: /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11, excluding 'slurm_logs'
+Found 10 simulation folders (excluding 'slurm_logs') in /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11.
+There are 10 simulation folders.
+Output/Error logs will be in the 'slurm_logs' directory.
+--- Task Start ---
+SLURM Array Job ID: 22620745
+SLURM Array Task ID: 6
+Parent Simulation Directory: /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11
+Processing folder: /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11/c222_s0.10_r18_k16_a1_i700_t9_p3.1d10_5d11
+Current directory: /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11/c222_s0.10_r18_k16_a1_i700_t9_p3.1d10_5d11
+SLURM_JOB_NUM_NODES = 64
+OMP_NUM_THREADS = 72
+--- Task 6 completed for folder /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11/c222_s0.10_r18_k16_a1_i700_t9_p3.1d10_5d11 ---
+                                  
+================================= 
+Global information about the job: 
+================================= 
+  
+Job owner: truzaikin(75115)
+Job name:  salmon
+Node list: ravc[2041,2043,2045,2048-2052,2054-2056,2064,2067,2070,2133,2136,2138,2141-2143,2187,2190,2193-2194,2233-2234,2236,2241-2245,2256,2392-2393,2398-2399,2455,2457-2459,2462,2465,2469,2471-2472,2518,2520-2527,2533,2535,2537,2539,2543,2641,2646-2648]
+Job start: Mon Oct 27 10:35:38 CET 2025
+Job end:   Mon Oct 27 13:50:27 CET 2025
+Work dir:  /ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11/./
+Command:   /raven/ptmp/truzaikin/Si/orthogonal/Oct/Oct27/5d11/SUBMIT_RAVEN.sh
+  
+  
+  
+==========================================================================================
+Information on jobsteps (Note: MaxRSS/AveRSS is the maximum/average over all 
+tasks of the per-task memory high-water marks; cf. "man sacct"): 
+==========================================================================================
+  
+JobID            JobName NNodes NTasks  NCPUS       MaxRSS       AveRSS    Elapsed ExitCode
+------------- ---------- ------ ------ ------ ------------ ------------ ---------- --------
+22620745_6        salmon     64          9216                             03:14:49      0:0
+22620745_6.0      salmon     64     64   9216    15976.09M    15945.00M   00:29:06      0:0
+22620745_6.1      salmon     64     64   9216     2596.75M     2588.93M   01:22:51      0:0
+22620745_6.2      salmon     64     64   9216     2626.84M     2599.87M   01:22:44      0:0
+  
+Maximum memory per node: 16.752148 GB (defined as MaxRSS*Ntasks/NNodes)
+CPU utilization: 90.8 %
+  
