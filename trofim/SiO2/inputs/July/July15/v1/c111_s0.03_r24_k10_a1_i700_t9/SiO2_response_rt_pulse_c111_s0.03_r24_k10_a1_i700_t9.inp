@@ -1,0 +1,111 @@
+&calculation
+  theory = 'tddft_response'  
+/
+
+&control
+  sysname = 'lr'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  nproc_k  = 8
+  nproc_ob =  1
+  nproc_rgrid = 1, 1, 1
+/
+
+&units
+  unit_system='A_eV_fs'
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 4.913357384280d0, 8.51018557085248d0, 5.40515497851379d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 2
+  natom  = 18
+  nelec  = 96
+  nstate = 64
+/
+
+
+&pseudo
+  izatom(1)=14
+!-- psp8 pseudopotential from abinit web-site --
+  file_pseudo(1) = './Si.psp8'
+  lloc_ps(1)=4
+  izatom(2)=8
+  file_pseudo(2) = './O.psp8'
+  lloc_ps(2)=4
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc ='PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 16, 32, 24
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 10, 10, 10
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.0005d0
+  nt = 36000
+/
+
+&emfield
+  !envelope shape of the incident pulse('impulse': impulsive field)
+  ae_shape1 = 'impulse'
+  
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 0.0d0, 0.0d0, 1.0d0
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 1800
+/
+
+&atomic_red_coor
+  'Si'     0.971    0.485    0.000    1
+  'Si'     0.262    0.740    0.668    1
+  'Si'     0.273    0.258    0.331    1
+  'Si'     0.467    0.000    0.000    1
+  'Si'     0.761    0.237    0.664    1
+  'Si'     0.762    0.758    0.335    1
+  'O'      0.778    0.642    0.117    2
+  'O'      0.558    0.709    0.549    2
+  'O'      0.157    0.557    0.793    2
+  'O'      0.157    0.421    0.218    2
+  'O'      0.563    0.291    0.448    2
+  'O'      0.780    0.361    0.880    2
+  'O'      0.278    0.122    0.125    2
+  'O'      0.061    0.215    0.550    2
+  'O'      0.654    0.081    0.785    2
+  'O'      0.666    0.926    0.217    2
+  'O'      0.060    0.809    0.452    2
+  'O'      0.275    0.862    0.882    2
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+
+/
+

@@ -1,0 +1,114 @@
+!########################################################################################!
+! Excercise 04: Ground state of crystalline silicon(periodic solids)                     !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'dft'
+/
+
+&control
+  !common name of output files
+  sysname = 'gs'
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  
+  nproc_k=8
+  nproc_ob=1
+  nproc_rgrid=1,1,1
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 5.43d0, 5.43d0, 10.86d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 16
+  nelec  = 64
+  nstate = 64
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to &atomic_reduced_coordinates. !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 18, 18, 36
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 16, 16, 8
+/
+
+&scf
+  !maximum number of scf iteration and threshold of convergence
+  nscf      = 700
+  threshold = 1.0d-9
+/
+
+&atomic_red_coor
+  'Si'    0.000    0.000    0.000    1
+  'Si'    0.212    0.288    0.135    1
+  'Si'    0.436    0.000    0.231    1
+  'Si'    0.000    0.486    0.255    1
+  'Si'    0.456    0.498    0.000    1
+  'Si'    0.698    0.194    0.409    1
+  'Si'    0.236    0.834    0.392    1
+  'Si'    0.794    0.834    0.146    1
+
+  'Si'    0.000    0.000    0.496    1
+  'Si'    0.232    0.238    0.613    1
+  'Si'    0.479    0.000    0.743    1
+  'Si'    0.000    0.577    0.753    1
+  'Si'    0.572    0.508    0.520    1
+  'Si'    0.789    0.202    0.899    1
+  'Si'    0.166    0.834    0.840    1
+  'Si'    0.666    0.685    0.583    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/

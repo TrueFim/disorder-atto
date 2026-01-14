@@ -1,0 +1,235 @@
+!########################################################################################!
+! Excercise 06: Electron dynamics in crystalline silicon under a pulsed electric field   !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!----------------------------------------------------------------------------------------!
+! * Copy the ground state data directory('data_for_restart') (or make symbolic link)     !
+!   calculated in 'samples/exercise_04_bulkSi_gs/' and rename the directory to 'restart/'!
+!   in the current directory.                                                            !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'tddft_pulse'
+/
+
+&control
+  !common name of output files
+  sysname = 'pulse_1e6'
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  
+  nproc_k=16
+  nproc_ob=1
+  nproc_rgrid=1,1,1
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 10.86d0, 10.86d0, 16.29d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 96
+  nelec  = 384
+  nstate = 384
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to   &atomic_reduced_coord.     !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 36, 36, 54
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 8, 8, 5
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.002d0
+  nt = 9000
+/
+
+&emfield
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape1 = 'Acos8'
+  
+  !peak intensity(W/cm^2) of the incident pulse
+  I_wcm2_1 = 1.0d9
+  
+  !duration of the incident pulse
+  tw1 = 1d0
+  
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega1 = 5d0
+  
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 0.0d0, 0.0d0, 1.0d0
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 3000
+/
+
+&atomic_red_coor
+  'Si'    0.000    0.000    0.000    1
+  'Si'    0.133    0.125    0.087    1
+  'Si'    0.261    0.000    0.170    1
+  'Si'    0.000    0.253    0.162    1
+  'Si'    0.253    0.254    0.000    1
+  'Si'    0.375    0.135    0.246    1
+  'Si'    0.117    0.376    0.251    1
+  'Si'    0.385    0.377    0.083    1
+
+  'Si'    0.000    0.000    0.332    1
+  'Si'    0.122    0.133    0.421    1
+  'Si'    0.253    0.000    0.500    1
+  'Si'    0.000    0.252    0.492    1
+  'Si'    0.248    0.261    0.337    1
+  'Si'    0.375    0.128    0.590    1
+  'Si'    0.125    0.369    0.577    1
+  'Si'    0.375    0.379    0.416    1
+
+  'Si'    0.000    0.000    0.665    1
+  'Si'    0.130    0.125    0.757    1
+  'Si'    0.251    0.000    0.839    1
+  'Si'    0.000    0.254    0.841    1
+  'Si'    0.243    0.248    0.663    1
+  'Si'    0.366    0.136    0.925    1
+  'Si'    0.117    0.377    0.919    1
+  'Si'    0.376    0.377    0.748    1
+
+  'Si'    0.000    0.505    0.000    1
+  'Si'    0.130    0.619    0.085    1
+  'Si'    0.249    0.491    0.169    1
+  'Si'    0.000    0.746    0.168    1
+  'Si'    0.254    0.746    0.000    1
+  'Si'    0.377    0.626    0.248    1
+  'Si'    0.124    0.886    0.250    1
+  'Si'    0.383    0.878    0.075    1
+
+  'Si'    0.000    0.489    0.332    1
+  'Si'    0.115    0.626    0.410    1
+  'Si'    0.262    0.505    0.503    1
+  'Si'    0.000    0.758    0.497    1
+  'Si'    0.238    0.748    0.329    1
+  'Si'    0.379    0.629    0.584    1
+  'Si'    0.125    0.879    0.591    1
+  'Si'    0.378    0.873    0.419    1
+
+  'Si'    0.000    0.512    0.666    1
+  'Si'    0.119    0.624    0.752    1
+  'Si'    0.248    0.501    0.830    1
+  'Si'    0.000    0.747    0.834    1
+  'Si'    0.252    0.743    0.672    1
+  'Si'    0.381    0.629    0.918    1
+  'Si'    0.125    0.877    0.923    1
+  'Si'    0.380    0.877    0.753    1
+
+  'Si'    0.499    0.000    0.000    1
+  'Si'    0.627    0.121    0.082    1
+  'Si'    0.754    0.000    0.168    1
+  'Si'    0.496    0.247    0.174    1
+  'Si'    0.758    0.251    0.000    1
+  'Si'    0.881    0.133    0.254    1
+  'Si'    0.629    0.374    0.248    1
+  'Si'    0.879    0.366    0.079    1
+
+  'Si'    0.498    0.000    0.336    1
+  'Si'    0.627    0.132    0.413    1
+  'Si'    0.743    0.000    0.499    1
+  'Si'    0.492    0.238    0.498    1
+  'Si'    0.753    0.245    0.334    1
+  'Si'    0.873    0.124    0.580    1
+  'Si'    0.619    0.387    0.582    1
+  'Si'    0.874    0.370    0.420    1
+
+  'Si'    0.488    0.000    0.663    1
+  'Si'    0.622    0.126    0.755    1
+  'Si'    0.748    0.000    0.834    1
+  'Si'    0.502    0.248    0.836    1
+  'Si'    0.751    0.262    0.661    1
+  'Si'    0.870    0.124    0.915    1
+  'Si'    0.617    0.363    0.925    1
+  'Si'    0.885    0.373    0.751    1
+
+  'Si'    0.499    0.494    0.000    1
+  'Si'    0.632    0.626    0.085    1
+  'Si'    0.753    0.494    0.173    1
+  'Si'    0.494    0.755    0.170    1
+  'Si'    0.753    0.748    0.000    1
+  'Si'    0.880    0.625    0.242    1
+  'Si'    0.628    0.880    0.250    1
+  'Si'    0.877    0.875    0.088    1
+
+  'Si'    0.493    0.496    0.329    1
+  'Si'    0.613    0.626    0.412    1
+  'Si'    0.758    0.503    0.498    1
+  'Si'    0.508    0.750    0.506    1
+  'Si'    0.747    0.751    0.332    1
+  'Si'    0.868    0.619    0.584    1
+  'Si'    0.636    0.877    0.587    1
+  'Si'    0.882    0.884    0.416    1
+
+  'Si'    0.496    0.498    0.668    1
+  'Si'    0.631    0.614    0.748    1
+  'Si'    0.745    0.507    0.834    1
+  'Si'    0.501    0.742    0.830    1
+  'Si'    0.741    0.753    0.662    1
+  'Si'    0.883    0.632    0.916    1
+  'Si'    0.627    0.884    0.918    1
+  'Si'    0.877    0.875    0.747    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/

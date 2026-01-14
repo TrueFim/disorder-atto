@@ -1,0 +1,120 @@
+&calculation
+  theory = 'tddft_pulse'  
+/
+
+&control
+  sysname = 'pulse_1e12'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  nproc_k  = 4
+  nproc_ob =  1
+  nproc_rgrid = 1, 1, 1
+/
+
+&units
+  unit_system='A_eV_fs'
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 4.913357384280d0, 8.51018557085248d0, 5.40515497851379d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 2
+  natom  = 18
+  nelec  = 96
+  nstate = 64
+/
+
+
+&pseudo
+  izatom(1)=14
+!-- psp8 pseudopotential from abinit web-site --
+  file_pseudo(1) = './Si.psp8'
+  lloc_ps(1)=4
+  izatom(2)=8
+  file_pseudo(2) = './O.psp8'
+  lloc_ps(2)=4
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc ='PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 24, 40, 32
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 4, 4, 4
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.0005d0
+  nt = 36000
+/
+
+&emfield
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape1 = 'Acos8'
+  
+  !peak intensity(W/cm^2) of the incident pulse
+  I_wcm2_1 = 1.0d12
+  
+  !duration of the incident pulse
+  tw1 = 10.672d0
+  
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega1 = 1.55d0
+  
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 0.0d0, 0.0d0, 1.0d0
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 3000
+/
+
+&atomic_red_coor
+  'Si'     0.970    0.608    0.000    1
+  'Si'     0.302    0.783    0.820    1
+  'Si'     0.445    0.265    0.354    1
+  'Si'     0.510    0.000    0.000    1
+  'Si'     0.773    0.146    0.583    1
+  'Si'     0.917    0.581    0.243    1
+  'O'      0.850    0.494    0.157    2
+  'O'      0.600    0.535    0.442    2
+  'O'      0.241    0.604    0.869    2
+  'O'      0.275    0.526    0.085    2
+  'O'      0.607    0.281    0.306    2
+  'O'      0.687    0.597    0.832    2
+  'O'      0.416    0.017    0.122    2
+  'O'      0.102    0.071    0.567    2
+  'O'      0.698    0.250    0.812    2
+  'O'      0.554    0.867    0.107    2
+  'O'      0.144    0.789    0.408    2
+  'O'      0.339    0.780    0.751    2
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+
+/
+

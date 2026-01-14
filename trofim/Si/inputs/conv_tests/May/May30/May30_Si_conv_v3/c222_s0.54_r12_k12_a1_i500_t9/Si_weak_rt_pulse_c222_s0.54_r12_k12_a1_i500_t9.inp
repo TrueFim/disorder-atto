@@ -1,0 +1,189 @@
+!########################################################################################!
+! Excercise 06: Electron dynamics in crystalline silicon under a pulsed electric field   !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!----------------------------------------------------------------------------------------!
+! * Copy the ground state data directory('data_for_restart') (or make symbolic link)     !
+!   calculated in 'samples/exercise_04_bulkSi_gs/' and rename the directory to 'restart/'!
+!   in the current directory.                                                            !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'tddft_pulse'
+/
+
+&control
+  !common name of output files
+  sysname = 'pulse_1e6'
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 10.86d0, 10.86d0, 10.86d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 64
+  nelec  = 256
+  nstate = 256
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to   &atomic_reduced_coord.     !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 24, 24, 24
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 6, 6, 6
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.002d0
+  nt = 9000
+/
+
+&emfield
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape1 = 'Acos2'
+  
+  !peak intensity(W/cm^2) of the incident pulse
+  I_wcm2_1 = 1.0d6
+  
+  !duration of the incident pulse
+  tw1 = 10.672d0
+  
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega1 = 1.55d0
+  
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 0.0d0, 0.0d0, 1.0d0
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 3000
+/
+
+&atomic_red_coor
+  'Si'    0.014    0.039    0.000    1
+  'Si'    0.125    0.166    0.118    1
+  'Si'    0.308    0.099    0.278    1
+  'Si'    0.013    0.267    0.272    1
+  'Si'    0.242    0.150    0.020    1
+  'Si'    0.323    0.225    0.400    1
+  'Si'    0.189    0.381    0.406    1
+  'Si'    0.330    0.306    0.145    1
+
+  'Si'    0.000    0.017    0.529    1
+  'Si'    0.142    0.183    0.572    1
+  'Si'    0.262    0.071    0.740    1
+  'Si'    0.000    0.265    0.850    1
+  'Si'    0.270    0.271    0.490    1
+  'Si'    0.376    0.141    0.832    1
+  'Si'    0.066    0.343    0.858    1
+  'Si'    0.301    0.353    0.663    1
+
+  'Si'    0.000    0.400    0.050    1
+  'Si'    0.125    0.605    0.161    1
+  'Si'    0.264    0.440    0.228    1
+  'Si'    0.000    0.756    0.308    1
+  'Si'    0.256    0.717    0.017    1
+  'Si'    0.388    0.668    0.445    1
+  'Si'    0.106    0.885    0.327    1
+  'Si'    0.341    0.843    0.113    1
+
+  'Si'    0.000    0.510    0.512    1
+  'Si'    0.123    0.525    0.628    1
+  'Si'    0.189    0.498    0.714    1
+  'Si'    0.000    0.756    0.656    1
+  'Si'    0.313    0.801    0.469    1
+  'Si'    0.475    0.660    0.897    1
+  'Si'    0.157    0.920    0.875    1
+  'Si'    0.347    0.801    0.636    1
+
+  'Si'    0.478    0.073    0.000    1
+  'Si'    0.646    0.117    0.118    1
+  'Si'    0.788    0.000    0.282    1
+  'Si'    0.530    0.291    0.281    1
+  'Si'    0.709    0.208    0.013    1
+  'Si'    0.905    0.070    0.430    1
+  'Si'    0.725    0.417    0.427    1
+  'Si'    0.920    0.328    0.172    1
+
+  'Si'    0.485    0.004    0.516    1
+  'Si'    0.551    0.154    0.550    1
+  'Si'    0.780    0.048    0.650    1
+  'Si'    0.416    0.318    0.760    1
+  'Si'    0.790    0.265    0.400    1
+  'Si'    0.922    0.102    0.822    1
+  'Si'    0.587    0.389    0.933    1
+  'Si'    0.832    0.313    0.706    1
+
+  'Si'    0.544    0.493    0.000    1
+  'Si'    0.626    0.648    0.173    1
+  'Si'    0.801    0.455    0.237    1
+  'Si'    0.500    0.771    0.221    1
+  'Si'    0.704    0.657    0.000    1
+  'Si'    0.909    0.685    0.412    1
+  'Si'    0.716    0.875    0.389    1
+  'Si'    0.897    0.887    0.125    1
+
+  'Si'    0.581    0.473    0.569    1
+  'Si'    0.615    0.547    0.681    1
+  'Si'    0.757    0.543    0.751    1
+  'Si'    0.406    0.788    0.701    1
+  'Si'    0.674    0.805    0.520    1
+  'Si'    0.880    0.725    0.840    1
+  'Si'    0.525    0.875    0.900    1
+  'Si'    0.871    0.854    0.624    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/
