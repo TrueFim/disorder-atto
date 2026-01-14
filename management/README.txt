@@ -1,0 +1,1 @@
+These files are managed by Claude Code. Manual changes to the files might get overwritten.
