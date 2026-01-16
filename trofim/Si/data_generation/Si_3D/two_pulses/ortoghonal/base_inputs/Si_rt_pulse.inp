@@ -41,7 +41,7 @@
   
   nproc_ob=1
   nproc_rgrid=1,1,1
-  nproc_k=125
+  nproc_k=64
 /
 
 &system
@@ -111,7 +111,7 @@
   !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
   ae_shape2 = 'Acos4'
   !peak intensity(W/cm^2) of the incident pulse 2d12 (as in article) or 5d11 --- pump
-  I_wcm2_2 = 8d12
+  I_wcm2_2 = 5d11
   !duration of the incident pulse
   tw2 = 5.8d0
   !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
