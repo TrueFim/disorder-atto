@@ -37,7 +37,7 @@
   
   nproc_ob=1
   nproc_rgrid=1,1,1
-  nproc_k=64
+  nproc_k=125
 /
 
 &system
