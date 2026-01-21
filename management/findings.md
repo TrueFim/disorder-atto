@@ -9,6 +9,12 @@
 
 ## Probably true
 - The phenomenological parameters of the generalized Drude model ($\gamma$, $m^*$, $\alpha$) exhibit systematic dependencies on the degree and character of disorder, with more uniform conduction band population in highly disordered media reducing the required effective mass variation.
+- Disorder accelerates free-induction decay (dephasing of dipole oscillations $J_x(t)$ after pump-probe excitation). The effect is clearly visible in time-domain data.
+- Disorder red-shifts the FID spectrum rather than simply broadening it. This may reflect preferential population of lower-energy states enabled by $k$-selection rule breakdown and DOS redistribution.
+- For a perfect crystal, the FID spectrum consists of discrete peaks corresponding to specific transitions; disorder merges these into a single dominant low-frequency feature (especially pronounced in amorphous Si).
+- In amorphous silicon, the FID spectral width and red shift depend monotonically on the SOAP disorder metric: more disorder → broader spectrum shifted to lower frequencies.
 
 ## Seems to be true
 - Disorder does not produce significant qualitative differences in the time-domain dynamics of photoinjection (based on initial investigations of the nonlinear work), suggesting that the primary signature of disorder lies in transport and dephasing rather than the injection process itself.
+- Disorder minimally affects the early-time excitation dynamics: $J_x(t)$ for a perfect crystal and a disordered solid stay in phase for several femtoseconds when the pump pulse is moderately strong ($3.5 \times 10^9$ W/cm²).
+- The spectral phase of FID in disordered media is flatter than in perfect crystals, possibly indicating more synchronized oscillator phases due to homogeneous population.

@@ -8,6 +8,12 @@ Is the electric current after the pump pulse described by the Drude model? If no
 ### How does disorder affect free-induction decay (FID) after femtosecond nonlinear photoinjection?
 How does the decay of dipole oscillations in a perfect crystal differ from that in a disordered solid? Is FID in a static disordered potential governed solely by linear inhomogeneous broadening, where the decay of the macroscopic polarization $\mathbf{P}(t)$ arises purely from the destructive interference of independent dipoles oscillating at different, statically distributed frequencies? Does the Coulomb many-body scattering matter? Does the dependence on the supercell size suggest that electron localization matters? What are the most appropriate ways to visualize and characterize the effect of disorder on FID?
 
+**Sub-questions emerging from analysis (2026-01-21):**
+- Does the dephasing time $T_2$ correlate with the momentum relaxation rate $\gamma$? (Both arise from scattering off the disordered potential, but probe different physics: interband coherence vs. intraband transport.)
+- Is there probe-induced dephasing? Does disorder damp $J_z(t)$ in pump-only simulations differently from $J_x(t)$ in pump-probe simulations?
+- Why does disorder red-shift the FID spectrum rather than simply broadening it? Does it reflect preferential population of lower-energy states?
+- Does disorder flatten the spectral phase of $J_z(\omega)$, implying synchronization of oscillators?
+
 ## Would be good to know
 
 ### How does disorder affect two-photon transitions driven by an intense, few-cycle laser pulse?
