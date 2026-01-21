@@ -15,6 +15,13 @@ def _(mo):
 
 
 @app.cell
+def _():
+    subtract_non_FID_signal = True
+    pump_pulse_t0 = 6.0 # (fs) the peak of the pump pulse
+    return pump_pulse_t0, subtract_non_FID_signal
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     ## Load the data and perform the Fourier transform
@@ -49,6 +56,17 @@ def _():
 
 
 @app.cell
+def _(plt):
+    # font sizes for plots
+    plt.rcParams['axes.titlesize'] = 14     # Title of the subplots
+    plt.rcParams['axes.labelsize'] = 12     # x and y labels
+    plt.rcParams['xtick.labelsize'] = 11    # x-axis tick labels
+    plt.rcParams['ytick.labelsize'] = 11    # y-axis tick labels
+    plt.rcParams['legend.fontsize'] = 11    # Legend font size
+    return
+
+
+@app.cell
 def _():
     # load all the data files
     from load_csv_tree import load_csv_data
@@ -57,9 +75,9 @@ def _():
 
 
 @app.cell
-def _(all_data, np, scipy):
+def _(all_data, np, pump_pulse_t0, scipy, subtract_non_FID_signal):
     # select the relevant data and fix the time axis
-    def select_relevant_data_and_fix_time_axis(all_data, t0):
+    def select_relevant_data_and_fix_time_axis(all_data, t0, subtract_non_FID_signal):
     	all_relevant_data = {}
     	for dir1 in all_data:
     		relevant_data = {}
@@ -69,42 +87,42 @@ def _(all_data, np, scipy):
     			time_mismatch = data1[-1,0] - data2[-1,0]
     			data1[:, 0] -= t0
     			data2[:, 0] += time_mismatch - t0
-    			# extrapolate the Drude fit
-    			Drude_t = data2[:, 0]
-    			Drude_fit = data2[:, 2]
-    			i1 = np.flatnonzero(Drude_fit >= 0.5 * np.max(Drude_fit))[0]
-    			t1 = Drude_t[i1]
-    			y1 = Drude_fit[i1]
-    			dydt1 = (Drude_fit[i1+1] - Drude_fit[i1]) / (Drude_t[i1+1] - Drude_t[i1])
-    			a = (dydt1 * t1 - 2 * y1) / t1**3
-    			b = (3 * y1 - dydt1 * t1) / t1**2
-    			t_grid = data1[:, 0]
-    			non_FID_component = np.zeros(len(t_grid))
-    			s = np.logical_and(t_grid>0, t_grid<t1)
-    			non_FID_component[s] = (a * t_grid[s] + b) * t_grid[s]**2
-    			interpolator = scipy.interpolate.CubicSpline(Drude_t, Drude_fit, extrapolate=True)
-    			s = (t_grid >= t1)
-    			non_FID_component[s] = interpolator(t_grid[s])
-    			# # TEST BEGIN
-    			# plt.plot(t_grid, data1[:, 1])
-    			# plt.plot(t_grid, non_FID_component)
-    			# #plt.plot(data1[:, 0], data1[:, 1])
-    			# #plt.plot(data2[:, 0], data2[:, 1])
-    			# #plt.plot(data2[:, 0], data2[:, 2])
-    			# plt.show()
-    			# # TEST END
-    			data1[:, 1] -= non_FID_component
+    			if subtract_non_FID_signal:
+    				# extrapolate the Drude fit
+    				Drude_t = data2[:, 0]
+    				Drude_fit = data2[:, 2]
+    				i1 = np.flatnonzero(Drude_fit >= 0.5 * np.max(Drude_fit))[0]
+    				t1 = Drude_t[i1]
+    				y1 = Drude_fit[i1]
+    				dydt1 = (Drude_fit[i1+1] - Drude_fit[i1]) / (Drude_t[i1+1] - Drude_t[i1])
+    				a = (dydt1 * t1 - 2 * y1) / t1**3
+    				b = (3 * y1 - dydt1 * t1) / t1**2
+    				t_grid = data1[:, 0]
+    				non_FID_component = np.zeros(len(t_grid))
+    				s = np.logical_and(t_grid>0, t_grid<t1)
+    				non_FID_component[s] = (a * t_grid[s] + b) * t_grid[s]**2
+    				interpolator = scipy.interpolate.CubicSpline(Drude_t, Drude_fit, extrapolate=True)
+    				s = (t_grid >= t1)
+    				non_FID_component[s] = interpolator(t_grid[s])
+    				# # TEST BEGIN
+    				# plt.plot(t_grid, data1[:, 1])
+    				# plt.plot(t_grid, non_FID_component)
+    				# #plt.plot(data1[:, 0], data1[:, 1])
+    				# #plt.plot(data2[:, 0], data2[:, 1])
+    				# #plt.plot(data2[:, 0], data2[:, 2])
+    				# plt.show()
+    				# # TEST END
+    				data1[:, 1] -= non_FID_component
     			relevant_data[dir2] = data1
     		all_relevant_data[dir1] = relevant_data
     	return all_relevant_data
 
-    t0 = 6.0 # (fs) the peak of the pump pulse
-    FID_data_time_domain = select_relevant_data_and_fix_time_axis(all_data, t0)
+    FID_data_time_domain = select_relevant_data_and_fix_time_axis(all_data, pump_pulse_t0, subtract_non_FID_signal)
     return (FID_data_time_domain,)
 
 
 @app.cell
-def _(FID_data_time_domain, Fourier_transform, np, soft_window):
+def _(FID_data_time_domain, Fourier_transform, au, np, soft_window):
     # Fourer transform all the relevant data
     def Fourier_transform_relevant_data(all_relevant_data, omega_array, softening_time):
         Fourier_transformed_data = {}
@@ -123,7 +141,7 @@ def _(FID_data_time_domain, Fourier_transform, np, soft_window):
                 Fourier_transformed_data[dir1][dir2] = transformed_data
         return Fourier_transformed_data
 
-    omega_array = np.linspace(0., 12.0, 500)
+    omega_array = np.linspace(1., 8.0, 500) / au.eV / au.fs
     FID_data_frequency_domain = Fourier_transform_relevant_data(FID_data_time_domain, omega_array, softening_time=10.0)
     return FID_data_frequency_domain, omega_array
 
@@ -151,7 +169,6 @@ def _(
             for dir in sorted(time_domain_data['cryst']):
                 fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
                 fig.suptitle(dir, fontsize=16)
-                plt.rcParams.update({'font.size': 14})
                 # time-domain plot
                 ax = axs[0]
                 X = time_domain_data['cryst'][dir][:,0]
@@ -235,7 +252,6 @@ def _(
 ):
     def perform_visualization2(time_domain_data, omega_array, frequency_domain_data):
         fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
-        plt.rcParams.update({'font.size': 14})
         axs[0].set_title('Electric current after subtracting wave packet motion')
         axs[0].set_xlabel('time (fs)')
         axs[0].set_ylabel(r'$J_x(t)$ (atomic units)')
