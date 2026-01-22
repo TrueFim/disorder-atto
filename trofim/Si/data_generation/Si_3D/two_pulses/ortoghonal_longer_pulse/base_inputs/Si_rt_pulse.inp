@@ -39,9 +39,9 @@
   yn_ffte = 'y'
   
   
-  nproc_ob=1
+  nproc_ob=25
   nproc_rgrid=1,1,1
-  nproc_k=125
+  nproc_k=5
 /
 
 &system
@@ -90,7 +90,7 @@
 &tgrid
   !time step size and number of time grids(steps)
   dt = 0.002d0
-  nt = 15000
+  nt = 500
 /  
 
 
