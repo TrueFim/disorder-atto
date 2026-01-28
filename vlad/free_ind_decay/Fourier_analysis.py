@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.4"
+__generated_with = "0.19.6"
 app = marimo.App()
 
 
@@ -154,7 +154,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     FID_data_frequency_domain,
     FID_data_time_domain,
@@ -163,6 +163,7 @@ def _(
     np,
     omega_array,
     plt,
+    scipy,
 ):
     def perform_visualization1(time_domain_data, omega_array, frequency_domain_data):
         with PdfPages('cryst_vs_displ.pdf') as pdf:
@@ -197,35 +198,49 @@ def _(
                 ax.set_title('Normalized spectral intensity')
                 ax.legend()
                 ax.set_xlim(X[0], X[-1])
-                # spectral phases
+                # # spectral phases
+                # ax = axs[2]
+                # # X = omega_array * au.fs * au.eV
+                # Y = np.angle(frequency_domain_data['cryst'][dir])
+                # Y[i1:] = np.unwrap(Y[i1:])
+                # Y[i1::-1] = np.unwrap(Y[i1::-1])
+                # Y_min = np.min(Y)
+                # Y_max = np.max(Y)
+                # ax.plot(X, Y, label='periodic lattice')
+                # Y = np.angle(frequency_domain_data['displ'][dir])
+                # Y[i2:] = np.unwrap(Y[i2:])
+                # Y[i2::-1] = np.unwrap(Y[i2::-1])
+                # Y_min = min(Y_min, np.min(Y))
+                # Y_max = max(Y_max, np.max(Y))
+                # ax.plot(X, Y, label='random displacements')
+                # ax.set_xlabel(r'$\hbar\omega$ (eV)')
+                # ax.set_ylabel('radians')
+                # ax.set_title('Spectral phase')
+                # ax.set_xlim(X[0], X[-1])
+                # ax.set_ylim(max(-20, Y_min), min(20, Y_max))
+                # autocorrelations
                 ax = axs[2]
-                # X = omega_array * au.fs * au.eV
-                Y = np.angle(frequency_domain_data['cryst'][dir])
-                Y[i1:] = np.unwrap(Y[i1:])
-                Y[i1::-1] = np.unwrap(Y[i1::-1])
-                Y_min = np.min(Y)
-                Y_max = np.max(Y)
+                dt = time_domain_data['cryst'][dir][1,0] - \
+                    time_domain_data['cryst'][dir][0,0]
+                Y = time_domain_data['cryst'][dir][:,1]
+                N = len(Y)
+                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+                Y /= np.max(np.abs(Y))
+                X = dt * np.arange(-(N-1), N)
                 ax.plot(X, Y, label='periodic lattice')
-                Y = np.angle(frequency_domain_data['displ'][dir])
-                Y[i2:] = np.unwrap(Y[i2:])
-                Y[i2::-1] = np.unwrap(Y[i2::-1])
-                Y_min = min(Y_min, np.min(Y))
-                Y_max = max(Y_max, np.max(Y))
+                dt = time_domain_data['displ'][dir][1,0] - \
+                    time_domain_data['displ'][dir][0,0]
+                Y = time_domain_data['displ'][dir][:,1]
+                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+                N = len(Y)
+                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+                Y /= np.max(np.abs(Y))
+                X = dt * np.arange(-(N-1), N)
                 ax.plot(X, Y, label='random displacements')
-                ax.set_xlabel(r'$\hbar\omega$ (eV)')
-                ax.set_ylabel('radians')
-                ax.set_title('Spectral phase')
-                ax.set_xlim(X[0], X[-1])
-                ax.set_ylim(max(-20, Y_min), min(20, Y_max))
+                ax.set_xlabel('time (fs)')
+                ax.set_title('Autocorrelation')
                 ax.legend()
-                # # Adjust margins
-                # plt.subplots_adjust(
-                #     left=0.1,   # left margin
-                #     right=0.9,  # right margin
-                #     bottom=0.1, # bottom margin
-                #     top=0.9,    # top margin
-                #     wspace=0.3
-                # )
+                ax.set_xlim(0, 20.)
                 plt.tight_layout()
                 pdf.savefig()
 
