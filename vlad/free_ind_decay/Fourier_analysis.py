@@ -166,83 +166,69 @@ def _(
     scipy,
 ):
     def perform_visualization1(time_domain_data, omega_array, frequency_domain_data):
-        with PdfPages('cryst_vs_displ.pdf') as pdf:
-            for dir in sorted(time_domain_data['cryst']):
-                fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
-                fig.suptitle(dir, fontsize=16)
-                # time-domain plot
-                ax = axs[0]
-                X = time_domain_data['cryst'][dir][:,0]
-                Y = time_domain_data['cryst'][dir][:,1]
-                ax.plot(X, Y, label='periodic lattice')
-                X = time_domain_data['displ'][dir][:,0]
-                Y = time_domain_data['displ'][dir][:,1]
-                ax.plot(X, Y, label='random displacements')
-                ax.set_xlabel('time (fs)')
-                ax.set_ylabel(r'$J_x(t)$ (atomic units)')
-                ax.set_title('Electric current after subtracting wave packet motion')
-                ax.legend()
-                ax.set_xlim(X[0], X[-1])
-                # spectral intensities
-                ax = axs[1]
-                X = omega_array * au.fs * au.eV
-                Y = np.abs(frequency_domain_data['cryst'][dir])**2
-                Y /= np.max(Y)
-                i1 = np.argmax(Y) # we'll need it to unwrap the spectral phase
-                ax.plot(X, Y, label='periodic lattice')
-                Y = np.abs(frequency_domain_data['displ'][dir])**2
-                Y /= np.max(Y)
-                i2 = np.argmax(Y) # we'll need it to unwrap the spectral phase
-                ax.plot(X, Y, label='random displacements')
-                ax.set_xlabel(r'$\hbar\omega$ (eV)')
-                ax.set_title('Normalized spectral intensity')
-                ax.legend()
-                ax.set_xlim(X[0], X[-1])
-                # # spectral phases
-                # ax = axs[2]
-                # # X = omega_array * au.fs * au.eV
-                # Y = np.angle(frequency_domain_data['cryst'][dir])
-                # Y[i1:] = np.unwrap(Y[i1:])
-                # Y[i1::-1] = np.unwrap(Y[i1::-1])
-                # Y_min = np.min(Y)
-                # Y_max = np.max(Y)
-                # ax.plot(X, Y, label='periodic lattice')
-                # Y = np.angle(frequency_domain_data['displ'][dir])
-                # Y[i2:] = np.unwrap(Y[i2:])
-                # Y[i2::-1] = np.unwrap(Y[i2::-1])
-                # Y_min = min(Y_min, np.min(Y))
-                # Y_max = max(Y_max, np.max(Y))
-                # ax.plot(X, Y, label='random displacements')
-                # ax.set_xlabel(r'$\hbar\omega$ (eV)')
-                # ax.set_ylabel('radians')
-                # ax.set_title('Spectral phase')
-                # ax.set_xlim(X[0], X[-1])
-                # ax.set_ylim(max(-20, Y_min), min(20, Y_max))
-                # autocorrelations
-                ax = axs[2]
-                dt = time_domain_data['cryst'][dir][1,0] - \
-                    time_domain_data['cryst'][dir][0,0]
-                Y = time_domain_data['cryst'][dir][:,1]
-                N = len(Y)
-                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
-                Y /= np.max(np.abs(Y))
-                X = dt * np.arange(-(N-1), N)
-                ax.plot(X, Y, label='periodic lattice')
-                dt = time_domain_data['displ'][dir][1,0] - \
-                    time_domain_data['displ'][dir][0,0]
-                Y = time_domain_data['displ'][dir][:,1]
-                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
-                N = len(Y)
-                Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
-                Y /= np.max(np.abs(Y))
-                X = dt * np.arange(-(N-1), N)
-                ax.plot(X, Y, label='random displacements')
-                ax.set_xlabel('time (fs)')
-                ax.set_title('Autocorrelation')
-                ax.legend()
-                ax.set_xlim(0, 20.)
-                plt.tight_layout()
-                pdf.savefig()
+    	with PdfPages('cryst_vs_displ.pdf') as pdf:
+    		for dir2 in sorted(time_domain_data['cryst']):
+    			fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
+    			fig.suptitle(dir2, fontsize=16)
+    			axs[0].set_title('Electric current after subtracting wave packet motion')
+    			axs[0].set_xlabel('time (fs)')
+    			axs[0].set_ylabel(r'$J_x(t)$ (atomic units)')
+    			axs[1].set_title('Normalized spectral intensity')
+    			axs[1].set_xlabel(r'$\hbar\omega$ (eV)')
+    			# axs[2].set_title('Spectral phase')
+    			# axs[2].set_xlabel(r'$\hbar\omega$ (eV)')
+    			# axs[2].set_ylabel('radians')
+    			axs[2].set_title('Autocorrelation envelope')
+    			axs[2].set_xlabel('time (fs)')
+    			# Y_min = 0 # for the spectral phase
+    			# Y_max = 0 # for the spectral phase
+    			colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    			labels = ('periodic lattice', 'random displacements')
+    			for n, dir1 in enumerate(('cryst', 'displ')):
+    				# time-domain plot
+    				ax = axs[0]
+    				X = time_domain_data[dir1][dir2][:,0]
+    				Y = time_domain_data[dir1][dir2][:,1]
+    				ax.plot(X, Y, color=colors[n], label=labels[n])
+    				ax.set_xlim(X[0], X[-1])
+    				# spectral intensities
+    				ax = axs[1]
+    				X = omega_array * au.fs * au.eV
+    				Y = np.abs(frequency_domain_data[dir1][dir2])**2
+    				Y /= np.max(Y)
+    				i1 = np.argmax(Y) # we'll need it to unwrap the spectral phase
+    				ax.plot(X, Y, color=colors[n], label=labels[n])
+    				ax.set_xlim(X[0], X[-1])
+    				# # spectral phases
+    				# ax = axs[2]
+    				# # X = omega_array * au.fs * au.eV
+    				# Y = np.angle(frequency_domain_data[dir1][dir2])
+    				# Y[i1:] = np.unwrap(Y[i1:])
+    				# Y[i1::-1] = np.unwrap(Y[i1::-1])
+    				# Y_min = min(Y_min, np.min(Y))
+    				# Y_max = max(Y_max, np.max(Y))
+    				# ax.plot(X, Y, label=labels[n])
+    				# ax.set_xlim(X[0], X[-1])
+    				# autocorrelations
+    				ax = axs[2]
+    				dt = time_domain_data[dir1][dir2][1,0] - \
+    					time_domain_data[dir1][dir2][0,0]
+    				Y = time_domain_data[dir1][dir2][:,1]
+    				N = len(Y)
+    				Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+    				Y /= np.max(np.abs(Y))
+    				X = dt * np.arange(-(N-1), N)
+    				# ax.plot(X, Y, color=colors[n], label=labels[n])
+    				Y = scipy.signal.envelope(Y, residual=None)
+    				ax.plot(X, Y.real, color=colors[n], label=labels[n])
+    				ax.set_xlabel('time (fs)')
+    			# axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
+    			axs[2].set_xlim(0, 15)
+    			axs[2].set_ylim(0, 1)
+    			for i in range(3):
+    				axs[i].legend()
+    			plt.tight_layout()
+    			pdf.savefig()
 
     perform_visualization1(FID_data_time_domain, omega_array, FID_data_frequency_domain)
     return
@@ -264,6 +250,7 @@ def _(
     np,
     omega_array,
     plt,
+    scipy,
 ):
     def perform_visualization2(time_domain_data, omega_array, frequency_domain_data):
         fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
@@ -272,17 +259,20 @@ def _(
         axs[0].set_ylabel(r'$J_x(t)$ (atomic units)')
         axs[1].set_title('Normalized spectral intensity')
         axs[1].set_xlabel(r'$\hbar\omega$ (eV)')
-        axs[2].set_title('Spectral phase')
-        axs[2].set_xlabel(r'$\hbar\omega$ (eV)')
-        axs[2].set_ylabel('radians')
-        Y_min = 0 # for the spectral phase
-        Y_max = 0 # for the spectral phase
-        for dir in sorted(time_domain_data['amorph']):
+        # axs[2].set_title('Spectral phase')
+        # axs[2].set_xlabel(r'$\hbar\omega$ (eV)')
+        # axs[2].set_ylabel('radians')
+        axs[2].set_title('Autocorrelation envelope')
+        axs[2].set_xlabel('time (fs)')
+        # Y_min = 0 # for the spectral phase
+        # Y_max = 0 # for the spectral phase
+        colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+        for n, dir in enumerate(sorted(time_domain_data['amorph'])):
             # time-domain plot
             ax = axs[0]
             X = time_domain_data['amorph'][dir][:,0]
             Y = time_domain_data['amorph'][dir][:,1]
-            ax.plot(X, Y, label=dir)
+            ax.plot(X, Y, color=colors[n], label=dir)
             ax.set_xlim(X[0], X[-1])
             # spectral intensities
             ax = axs[1]
@@ -290,19 +280,34 @@ def _(
             Y = np.abs(frequency_domain_data['amorph'][dir])**2
             Y /= np.max(Y)
             i1 = np.argmax(Y) # we'll need it to unwrap the spectral phase
-            ax.plot(X, Y, label=dir)
+            ax.plot(X, Y, color=colors[n], label=dir)
             ax.set_xlim(X[0], X[-1])
-            # spectral phases
+            # # spectral phases
+            # ax = axs[2]
+            # # X = omega_array * au.fs * au.eV
+            # Y = np.angle(frequency_domain_data['amorph'][dir])
+            # Y[i1:] = np.unwrap(Y[i1:])
+            # Y[i1::-1] = np.unwrap(Y[i1::-1])
+            # Y_min = min(Y_min, np.min(Y))
+            # Y_max = max(Y_max, np.max(Y))
+            # ax.plot(X, Y, label=dir)
+            # ax.set_xlim(X[0], X[-1])
+            # autocorrelations
             ax = axs[2]
-            # X = omega_array * au.fs * au.eV
-            Y = np.angle(frequency_domain_data['amorph'][dir])
-            Y[i1:] = np.unwrap(Y[i1:])
-            Y[i1::-1] = np.unwrap(Y[i1::-1])
-            Y_min = min(Y_min, np.min(Y))
-            Y_max = max(Y_max, np.max(Y))
-            ax.plot(X, Y, label=dir)
-            ax.set_xlim(X[0], X[-1])
-        axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
+            dt = time_domain_data['amorph'][dir][1,0] - \
+                time_domain_data['amorph'][dir][0,0]
+            Y = time_domain_data['amorph'][dir][:,1]
+            N = len(Y)
+            Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+            Y /= np.max(np.abs(Y))
+            X = dt * np.arange(-(N-1), N)
+            # ax.plot(X, Y, color=colors[n], label=dir)
+            Y = scipy.signal.envelope(Y, residual=None)
+            ax.plot(X, Y.real, color=colors[n], label=dir)
+            ax.set_xlabel('time (fs)')
+        # axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
+        axs[2].set_xlim(0, 15)
+        axs[2].set_ylim(0, 1)
         for i in range(3):
             axs[i].legend()
         plt.tight_layout()
