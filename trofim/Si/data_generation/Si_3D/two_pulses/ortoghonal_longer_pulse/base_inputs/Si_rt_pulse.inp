@@ -98,7 +98,7 @@
   !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
   ae_shape1 = 'Acos2'
   !peak intensity(W/cm^2) of the incident pulse 7d9 (1/4 k_B) or 3d10 (1/2 k_B) --- probe
-  I_wcm2_1 = 1.5d11
+  I_wcm2_1 = 4d10
   !duration of the incident pulse
   tw1 = 21d0
   !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
