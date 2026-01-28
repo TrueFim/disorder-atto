@@ -1,9 +1,9 @@
 # Project Plan: Optical attosecond spectroscopy of disordered media
 
-**Last Sync:** 2026-01-21
+**Last Sync:** 2026-01-28
 
 ## Status: 🟢 (On Track – Final Push)
-*Rationale:* The FID decision is resolved: **dipole oscillations will be included in the thesis**. Vlad's analysis revealed clear, interpretable disorder signatures—accelerated dephasing, spectral red shift, peak restructuring—that go beyond trivial ensemble averaging. Combined with the validated Drude model for transport, the thesis now has two complementary narratives. The deadline (2026-03-01) is ~5.5 weeks away. Risk level reduced from Yellow to Green because the scope is now fixed and the remaining work is quantitative refinement rather than exploratory.
+*Rationale:* The FID decision is resolved: **dipole oscillations will be included in the thesis**. Vlad's analysis revealed clear, interpretable disorder signatures—accelerated dephasing, spectral red shift, peak restructuring—that go beyond trivial ensemble averaging. Combined with the validated Drude model for transport, the thesis now has two complementary narratives. The deadline (2026-03-01) is ~4.5 weeks away. Risk level remains Green: scope is fixed, and the $T_2$ extraction methodology is now being finalized.
 
 ## Active Workflows
 
@@ -12,7 +12,11 @@
 
 ### Immediate Next Steps (Priority Order)
 1.  **[DONE]** ~~Dipole Oscillations (FID) Decision Point~~ → **Included in thesis.**
-2.  **[IN PROGRESS]** **FID Quantification:** Extract dephasing times $T_2$ from envelope fits. Investigate the 1.4d10_8d12 anomaly (delayed high-frequency emergence). Analyze pump-only $J_z(t)$ to test for probe-induced dephasing.
+2.  **[IN PROGRESS]** **FID Quantification:** Extract dephasing times $T_2$ from autocorrelation analysis.
+    - **Progress:** Autocorrelation envelope analysis implemented (`Fourier_analysis.py`). FWHM is problematic due to secondary maxima (revivals) in periodic-lattice data.
+    - **Decision:** Use **integral-based correlation time** as primary metric: $T_c = \frac{1}{f(0)} \int_0^{T_\mathrm{max}} f(t)\, dt$, where $f(t)$ is the autocorrelation. Robust to oscillations; equals $T_2$ for exponential decay.
+    - **Implementation plan:** (a) Add $T_c$ calculation to `Fourier_analysis.py`; (b) compute spectral width $\sigma_\omega$ as consistency check ($T_c \sim 1/\sigma_\omega$); (c) tabulate $T_c$ for all cases (cryst, displ, amorph).
+    - **Remaining:** Investigate the 1.4d10_8d12 anomaly (broad spectrum). Analyze pump-only $J_z(t)$ to test for probe-induced dephasing. Note qualitatively that periodic lattice shows revivals (discrete-spectrum beating) while disordered cases show monotonic decay (true dephasing).
 3.  **Correlate FID and Transport:** Plot $T_2$ vs. $\gamma$ to test whether dephasing time correlates with momentum relaxation rate. If a clear relationship exists, this unifies the two phenomena.
 4.  **Disorder Dependency Plots:** Trofim to systematically plot $\gamma(s)$, $m^*(s)$, $\alpha(s)$, and now $T_2(s)$ where $s$ quantifies disorder (RMS atomic displacement or SOAP metric).
 5.  **DOS-FID Link:** Check whether the observed spectral peaks in FID can be matched to features in DOS plots. Can DOS broadening predict $T_2$?
@@ -24,7 +28,7 @@
 ### Core Hypothesis (Revised)
 Disorder influences femtosecond-scale nonlinear optical response through **scattering off the disordered potential**, which manifests in two complementary channels:
 
-1. **Transport (intraband):** Momentum relaxation captured by Drude model with $m^*(t) \propto A^4(t)$. Disorder increases $\gamma$ and reduces effective mass variation (more uniform band population).
+1. **Transport (intraband):** Momentum relaxation captured by Drude model with $\Delta m^*(t) \propto A^4(t)$. Disorder increases $\gamma$ and reduces effective mass variation (more uniform band population).
 
 2. **Coherence (interband):** Dephasing of dipole oscillations. Disorder accelerates decay, red-shifts the spectrum, and restructures discrete crystal peaks into a single low-frequency feature. The spectral phase flattens, suggesting more synchronized oscillators.
 
