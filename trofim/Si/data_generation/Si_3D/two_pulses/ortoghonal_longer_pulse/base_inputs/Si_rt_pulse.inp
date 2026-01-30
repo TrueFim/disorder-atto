@@ -27,6 +27,11 @@
 &control
   !common name of output files
   sysname = 'both_pulses'
+  
+  yn_self_checkpoint = 'y'
+  
+  checkpoint_interval = 14999
+  
 /
 
 &units

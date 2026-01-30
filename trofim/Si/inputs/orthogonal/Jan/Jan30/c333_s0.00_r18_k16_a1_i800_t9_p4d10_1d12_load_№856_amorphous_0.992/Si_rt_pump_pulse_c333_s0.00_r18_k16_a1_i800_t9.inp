@@ -1,0 +1,367 @@
+!########################################################################################!
+! Excercise 06: Electron dynamics in crystalline silicon under a pulsed electric field   !
+!----------------------------------------------------------------------------------------!
+! * The detail of this excercise is explained in our manual(see chapter: 'Exercises').   !
+!   The manual can be obtained from: https://salmon-tddft.jp/documents.html              !
+! * Input format consists of group of keywords like:                                     !
+!     &group                                                                             !
+!       input keyword = xxx                                                              !
+!     /                                                                                  !
+!   (see chapter: 'List of input keywords' in the manual)                                !
+!----------------------------------------------------------------------------------------!
+! * Conversion from unit_system = 'a.u.' to 'A_eV_fs':                                   !
+!   Length: 1 [a.u.] = 0.52917721067    [Angstrom]                                       !
+!   Energy: 1 [a.u.] = 27.21138505      [eV]                                             !
+!   Time  : 1 [a.u.] = 0.02418884326505 [fs]                                             !
+!----------------------------------------------------------------------------------------!
+! * Copy the ground state data directory('data_for_restart') (or make symbolic link)     !
+!   calculated in 'samples/exercise_04_bulkSi_gs/' and rename the directory to 'restart/'!
+!   in the current directory.                                                            !
+!########################################################################################!
+
+&calculation
+  !type of theory
+  theory = 'tddft_pulse'
+/
+
+&control
+  !common name of output files
+  sysname = 'pump_pulse'
+  
+  yn_self_checkpoint = 'y'
+  
+  checkpoint_interval = 14999
+  
+/
+
+&units
+  !units used in input and output files
+  unit_system = 'A_eV_fs'
+/
+
+&parallel
+  !FFT for solving Poisson equation for calculating Hartree potential
+  yn_ffte = 'y'
+  
+  
+  nproc_ob=4
+  nproc_rgrid=3,2,3
+  nproc_k=125
+/
+
+&system
+  !periodic boundary condition
+  yn_periodic = 'y'
+  
+  !grid box size(x,y,z)
+  al(1:3) = 16.47d0, 16.47d0, 16.47d0
+  
+  !number of elements, atoms, electrons and states(bands)
+  nelem  = 1
+  natom  = 216
+  nelec  = 864
+  nstate = 864
+/
+
+&pseudo
+  !name of input pseudo potential file
+  file_pseudo(1) = './Si_rps.dat'
+  
+  !atomic number of element
+  izatom(1) = 14
+  
+  !angular momentum of pseudopotential that will be treated as local
+  lloc_ps(1) = 2
+  !--- Caution -------------------------------------------!
+  ! Index must correspond to   &atomic_reduced_coord.     !
+  !-------------------------------------------------------!
+/
+
+&functional
+  !functional('PZ' is Perdew-Zunger LDA: Phys. Rev. B 23, 5048 (1981).)
+  xc = 'PZ'
+/
+
+&rgrid
+  !number of spatial grids(x,y,z)
+  num_rgrid(1:3) = 54, 54, 54
+/
+
+&kgrid
+  !number of k-points(x,y,z)
+  num_kgrid(1:3) = 5, 5, 5
+/
+
+&tgrid
+  !time step size and number of time grids(steps)
+  dt = 0.002d0
+  nt = 15000
+/  
+
+
+&emfield
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape1 = 'Acos2'
+  !peak intensity(W/cm^2) of the incident pulse 7d9 (1/4 k_B) or 3d10 (1/2 k_B) --- probe
+  I_wcm2_1 = 0d9
+  !duration of the incident pulse
+  tw1 = 21d0
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega1 = 0.1d0
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re1(1:3) = 1.0d0, 0.0d0, 0.0d0
+  phi_cep1 = 0.25
+  
+  
+  !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
+  ae_shape2 = 'Acos4'
+  !peak intensity(W/cm^2) of the incident pulse 2d12 (as in article) or 5d11 --- pump
+  I_wcm2_2 = 1d12
+  !duration of the incident pulse
+  tw2 = 9d0
+  !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
+  omega2 = 1d0
+  !polarization unit vector(real part) for the incident pulse(x,y,z)
+  epdir_re2(1:3) = 0.0d0, 0.0d0, 1.0d0
+  
+  t1_t2 = 0d0
+  
+  
+  !--- Caution ---------------------------------------------------------!
+  ! Definition of the incident pulse is written in:                     !
+  ! https://www.sciencedirect.com/science/article/pii/S0010465518303412 !
+  !---------------------------------------------------------------------!
+/
+
+&analysis
+  !energy grid size and number of energy grids for output files
+  de      = 0.01d0
+  nenergy = 3000
+  
+  projection_option = 'td'
+  out_projection_step = 16000
+  
+/
+
+&atomic_red_coor
+  'Si'    0.633    0.860    0.077    1
+  'Si'    0.266    0.335    0.045    1
+  'Si'    0.913    0.965    0.349    1
+  'Si'    0.792    0.861    0.900    1
+  'Si'    0.655    0.889    0.433    1
+  'Si'    0.856    0.909    0.130    1
+  'Si'    0.333    0.389    0.268    1
+  'Si'    0.993    0.224    0.757    1
+  'Si'    0.491    0.392    0.096    1
+  'Si'    0.081    0.963    0.180    1
+  'Si'    0.082    0.642    0.509    1
+  'Si'    0.357    0.094    0.458    1
+  'Si'    0.275    0.510    0.867    1
+  'Si'    0.800    0.686    0.068    1
+  'Si'    0.047    0.277    0.984    1
+  'Si'    0.771    0.661    0.204    1
+  'Si'    0.468    0.693    0.403    1
+  'Si'    0.296    0.192    0.075    1
+  'Si'    0.378    0.116    0.820    1
+  'Si'    0.855    0.748    0.287    1
+  'Si'    0.188    0.902    0.788    1
+  'Si'    0.490    0.065    0.423    1
+  'Si'    0.884    0.104    0.321    1
+  'Si'    0.104    0.823    0.698    1
+  'Si'    0.171    0.389    0.435    1
+  'Si'    0.688    0.076    0.130    1
+  'Si'    0.603    0.991    0.042    1
+  'Si'    0.193    0.744    0.949    1
+  'Si'    0.995    0.557    0.421    1
+  'Si'    0.423    0.471    0.344    1
+  'Si'    0.698    0.578    0.620    1
+  'Si'    0.309    0.686    0.569    1
+  'Si'    0.715    0.602    0.979    1
+  'Si'    0.212    0.110    0.986    1
+  'Si'    0.691    0.910    0.295    1
+  'Si'    0.053    0.939    0.318    1
+  'Si'    0.581    0.639    1.006    1
+  'Si'    0.031    0.414    0.450    1
+  'Si'    0.802    0.351    0.401    1
+  'Si'    0.605    0.663    0.372    1
+  'Si'    0.109    0.334    0.212    1
+  'Si'    0.330    0.236    0.432    1
+  'Si'    0.941    0.325    0.376    1
+  'Si'    0.112    0.659    0.869    1
+  'Si'    0.479    0.522    0.569    1
+  'Si'    0.641    0.526    0.404    1
+  'Si'    0.883    0.782    0.655    1
+  'Si'    0.493    0.888    0.594    1
+  'Si'    0.576    0.478    0.177    1
+  'Si'    0.795    0.038    0.728    1
+  'Si'    0.581    0.306    0.346    1
+  'Si'    0.517    0.916    0.455    1
+  'Si'    0.576    0.140    0.511    1
+  'Si'    0.823    0.220    0.920    1
+  'Si'    0.933    0.992    0.704    1
+  'Si'    0.393    0.609    0.320    1
+  'Si'    0.715    0.947    0.648    1
+  'Si'    0.112    0.163    0.386    1
+  'Si'    0.361    0.254    0.295    1
+  'Si'    0.597    0.171    0.872    1
+  'Si'    0.630    0.025    0.901    1
+  'Si'    0.512    0.255    0.124    1
+  'Si'    0.196    0.080    0.629    1
+  'Si'    0.934    0.496    0.205    1
+  'Si'    0.850    0.083    0.952    1
+  'Si'    0.880    0.939    0.488    1
+  'Si'    0.388    0.780    0.141    1
+  'Si'    0.417    0.972    0.842    1
+  'Si'    0.139    0.523    0.895    1
+  'Si'    0.245    0.312    0.683    1
+  'Si'    0.826    0.054    0.098    1
+  'Si'    0.910    0.137    0.178    1
+  'Si'    0.114    0.502    0.043    1
+  'Si'    0.575    0.970    0.675    1
+  'Si'    0.861    0.415    0.620    1
+  'Si'    0.252    0.475    0.514    1
+  'Si'    0.961    0.359    0.230    1
+  'Si'    0.138    0.691    0.731    1
+  'Si'    0.026    0.576    0.281    1
+  'Si'    0.032    0.250    0.621    1
+  'Si'    0.055    0.775    0.483    1
+  'Si'    0.499    0.223    0.267    1
+  'Si'    0.557    0.446    0.312    1
+  'Si'    0.030    0.743    0.128    1
+  'Si'    0.495    0.721    0.771    1
+  'Si'    0.200    0.251    0.471    1
+  'Si'    0.221    0.939    0.159    1
+  'Si'    0.890    0.602    0.811    1
+  'Si'    0.054    0.112    0.158    1
+  'Si'    0.021    0.078    0.780    1
+  'Si'    0.356    0.585    0.951    1
+  'Si'    0.910    0.799    0.519    1
+  'Si'    0.133    0.020    0.404    1
+  'Si'    0.142    0.860    0.565    1
+  'Si'    0.243    0.964    0.019    1
+  'Si'    0.330    0.887    0.762    1
+  'Si'    0.765    0.174    0.698    1
+  'Si'    0.443    0.503    0.708    1
+  'Si'    0.241    0.145    0.848    1
+  'Si'    0.561    0.776    0.975    1
+  'Si'    0.714    0.275    0.324    1
+  'Si'    0.465    0.030    0.073    1
+  'Si'    -0.006    0.056    0.920    1
+  'Si'    0.381    0.946    0.979    1
+  'Si'    0.525    0.582    0.793    1
+  'Si'    0.859    0.581    0.456    1
+  'Si'    0.356    0.418    0.129    1
+  'Si'    0.740    0.471    0.015    1
+  'Si'    0.584    0.804    0.840    1
+  'Si'    0.770    0.998    0.865    1
+  'Si'    0.656    0.389    0.924    1
+  'Si'    0.938    0.664    0.042    1
+  'Si'    0.217    0.445    0.649    1
+  'Si'    0.305    0.526    0.730    1
+  'Si'    0.224    0.777    0.322    1
+  'Si'    0.666    0.721    0.596    1
+  'Si'    0.214    0.282    0.819    1
+  'Si'    0.741    0.970    0.512    1
+  'Si'    0.552    0.614    0.147    1
+  'Si'    0.689    0.419    0.787    1
+  'Si'    0.822    0.386    0.753    1
+  'Si'    0.967    0.026    0.569    1
+  'Si'    0.662    0.053    0.267    1
+  'Si'    0.045    0.441    0.817    1
+  'Si'    0.776    0.336    0.536    1
+  'Si'    0.300    0.037    0.238    1
+  'Si'    0.528    0.748    0.634    1
+  'Si'    0.874    0.273    0.148    1
+  'Si'    0.682    0.748    0.456    1
+  'Si'    0.523    0.082    0.286    1
+  'Si'    0.195    0.414    0.294    1
+  'Si'    0.879    0.446    0.980    1
+  'Si'    0.355    0.913    0.624    1
+  'Si'    0.549    0.273    0.487    1
+  'Si'    0.410    0.312    0.522    1
+  'Si'    0.629    0.195    0.729    1
+  'Si'    0.747    0.140    0.347    1
+  'Si'    0.170    0.220    0.604    1
+  'Si'    0.653    0.216    0.102    1
+  'Si'    0.851    0.251    0.785    1
+  'Si'    0.080    0.801    0.346    1
+  'Si'    0.968    0.861    0.737    1
+  'Si'    0.992    0.717    0.264    1
+  'Si'    0.391    0.451    0.484    1
+  'Si'    0.634    0.692    0.237    1
+  'Si'    0.717    0.773    0.816    1
+  'Si'    0.611    0.494    0.535    1
+  'Si'    0.744    0.808    0.680    1
+  'Si'    0.074    0.138    0.019    1
+  'Si'    0.329    0.059    0.596    1
+  'Si'    0.465    0.857    0.233    1
+  'Si'    0.747    0.635    0.836    1
+  'Si'    0.162    0.047    0.765    1
+  'Si'    0.738    0.306    0.181    1
+  'Si'    0.024    0.909    0.955    1
+  'Si'    0.249    0.797    0.181    1
+  'Si'    0.494    0.560    0.931    1
+  'Si'    0.079    0.308    0.844    1
+  'Si'    0.275    0.664    0.704    1
+  'Si'    0.267    0.171    0.213    1
+  'Si'    0.432    0.166    0.051    1
+  'Si'    0.829    0.887    0.265    1
+  'Si'    0.776    0.491    0.368    1
+  'Si'    0.085    0.472    0.679    1
+  'Si'    0.420    0.806    0.006    1
+  'Si'    0.933    0.823    0.879    1
+  'Si'    0.964    0.189    0.402    1
+  'Si'    0.664    0.554    0.757    1
+  'Si'    0.713    0.440    0.154    1
+  'Si'    0.938    0.171    0.545    1
+  'Si'    0.329    0.554    0.095    1
+  'Si'    0.407    0.145    0.685    1
+  'Si'    0.637    0.357    0.569    1
+  'Si'    0.448    0.660    0.541    1
+  'Si'    0.217    0.618    0.484    1
+  'Si'    0.520    0.418    0.949    1
+  'Si'    0.127    0.366    0.071    1
+  'Si'    0.380    0.283    0.662    1
+  'Si'    0.058    0.614    0.650    1
+  'Si'    0.801    0.202    0.571    1
+  'Si'    0.835    0.552    0.595    1
+  'Si'    0.796    0.524    0.232    1
+  'Si'    0.828    0.718    0.428    1
+  'Si'    0.716    0.119    0.485    1
+  'Si'    0.111    0.994    0.550    1
+  'Si'    0.549    0.939    0.812    1
+  'Si'    0.414    0.642    0.179    1
+  'Si'    0.542    0.115    0.648    1
+  'Si'    0.903    0.314    0.012    1
+  'Si'    0.432    0.341    0.873    1
+  'Si'    0.308    0.859    0.399    1
+  'Si'    0.360    0.748    0.791    1
+  'Si'    0.438    0.995    0.209    1
+  'Si'    0.163    0.552    0.264    1
+  'Si'    0.128    0.197    0.246    1
+  'Si'    0.159    0.876    0.926    1
+  'Si'    0.607    0.336    0.703    1
+  'Si'    0.683    0.251    0.958    1
+  'Si'    0.170    0.720    0.099    1
+  'Si'    0.914    0.644    0.675    1
+  'Si'    0.770    0.827    0.049    1
+  'Si'    0.966    0.684    0.901    1
+  'Si'    0.905    0.463    0.838    1
+  'Si'    0.972    0.526    0.073    1
+  'Si'    0.464    0.204    0.902    1
+  'Si'    0.252    0.638    0.345    1
+  'Si'    0.197    0.582    0.123    1
+  'Si'    0.331    0.719    0.924    1
+  'Si'    0.444    0.836    0.369    1
+  'Si'    0.274    0.000    0.375    1
+  'Si'    0.295    0.369    0.904    1
+  'Si'    0.280    0.826    0.537    1
+  'Si'    0.995    0.882    0.100    1
+  'Si'    1.002    0.390    0.592    1
+  'Si'    0.606    0.829    0.215    1
+  'Si'    0.467    0.364    0.735    1
+
+  !--- Format ---------------------------------------------------!
+  ! 'symbol' x y z index(correspond to that of pseudo potential) !
+  !--------------------------------------------------------------!
+/
