@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.6"
+__generated_with = "0.19.7"
 app = marimo.App()
 
 
@@ -154,7 +154,7 @@ def _(mo):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(
     FID_data_frequency_domain,
     FID_data_time_domain,
@@ -216,11 +216,14 @@ def _(
     				Y = time_domain_data[dir1][dir2][:,1]
     				N = len(Y)
     				Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
-    				Y /= np.max(np.abs(Y))
     				X = dt * np.arange(-(N-1), N)
     				# ax.plot(X, Y, color=colors[n], label=labels[n])
-    				Y = scipy.signal.envelope(Y, residual=None)
-    				ax.plot(X, Y.real, color=colors[n], label=labels[n])
+    				Y = np.abs(scipy.signal.envelope(Y, residual=None))
+    				Y /= np.max(np.abs(Y))
+    				i1 = np.flatnonzero(X >= 0)[0]
+    				T2 = scipy.integrate.trapezoid(Y[i1:], X[i1:])
+    				ax.plot(X, Y, color=colors[n], label=labels[n]+
+    					r"; $T_2={:.1f}$ fs".format(T2))
     				ax.set_xlabel('time (fs)')
     			# axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
     			axs[2].set_xlim(0, 15)
@@ -253,65 +256,67 @@ def _(
     scipy,
 ):
     def perform_visualization2(time_domain_data, omega_array, frequency_domain_data):
-        fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
-        axs[0].set_title('Electric current after subtracting wave packet motion')
-        axs[0].set_xlabel('time (fs)')
-        axs[0].set_ylabel(r'$J_x(t)$ (atomic units)')
-        axs[1].set_title('Normalized spectral intensity')
-        axs[1].set_xlabel(r'$\hbar\omega$ (eV)')
-        # axs[2].set_title('Spectral phase')
-        # axs[2].set_xlabel(r'$\hbar\omega$ (eV)')
-        # axs[2].set_ylabel('radians')
-        axs[2].set_title('Autocorrelation envelope')
-        axs[2].set_xlabel('time (fs)')
-        # Y_min = 0 # for the spectral phase
-        # Y_max = 0 # for the spectral phase
-        colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
-        for n, dir in enumerate(sorted(time_domain_data['amorph'])):
-            # time-domain plot
-            ax = axs[0]
-            X = time_domain_data['amorph'][dir][:,0]
-            Y = time_domain_data['amorph'][dir][:,1]
-            ax.plot(X, Y, color=colors[n], label=dir)
-            ax.set_xlim(X[0], X[-1])
-            # spectral intensities
-            ax = axs[1]
-            X = omega_array * au.fs * au.eV
-            Y = np.abs(frequency_domain_data['amorph'][dir])**2
-            Y /= np.max(Y)
-            i1 = np.argmax(Y) # we'll need it to unwrap the spectral phase
-            ax.plot(X, Y, color=colors[n], label=dir)
-            ax.set_xlim(X[0], X[-1])
-            # # spectral phases
-            # ax = axs[2]
-            # # X = omega_array * au.fs * au.eV
-            # Y = np.angle(frequency_domain_data['amorph'][dir])
-            # Y[i1:] = np.unwrap(Y[i1:])
-            # Y[i1::-1] = np.unwrap(Y[i1::-1])
-            # Y_min = min(Y_min, np.min(Y))
-            # Y_max = max(Y_max, np.max(Y))
-            # ax.plot(X, Y, label=dir)
-            # ax.set_xlim(X[0], X[-1])
-            # autocorrelations
-            ax = axs[2]
-            dt = time_domain_data['amorph'][dir][1,0] - \
-                time_domain_data['amorph'][dir][0,0]
-            Y = time_domain_data['amorph'][dir][:,1]
-            N = len(Y)
-            Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
-            Y /= np.max(np.abs(Y))
-            X = dt * np.arange(-(N-1), N)
-            # ax.plot(X, Y, color=colors[n], label=dir)
-            Y = scipy.signal.envelope(Y, residual=None)
-            ax.plot(X, Y.real, color=colors[n], label=dir)
-            ax.set_xlabel('time (fs)')
-        # axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
-        axs[2].set_xlim(0, 15)
-        axs[2].set_ylim(0, 1)
-        for i in range(3):
-            axs[i].legend()
-        plt.tight_layout()
-        plt.savefig('amorph.pdf', format='pdf')
+    	fig, axs = plt.subplots(3, 1, figsize=(8.27*0.9, 11.69*0.9))
+    	axs[0].set_title('Electric current after subtracting wave packet motion')
+    	axs[0].set_xlabel('time (fs)')
+    	axs[0].set_ylabel(r'$J_x(t)$ (atomic units)')
+    	axs[1].set_title('Normalized spectral intensity')
+    	axs[1].set_xlabel(r'$\hbar\omega$ (eV)')
+    	# axs[2].set_title('Spectral phase')
+    	# axs[2].set_xlabel(r'$\hbar\omega$ (eV)')
+    	# axs[2].set_ylabel('radians')
+    	axs[2].set_title('Autocorrelation envelope')
+    	axs[2].set_xlabel('time (fs)')
+    	# Y_min = 0 # for the spectral phase
+    	# Y_max = 0 # for the spectral phase
+    	colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    	for n, dir in enumerate(sorted(time_domain_data['amorph'])):
+    		# time-domain plot
+    		ax = axs[0]
+    		X = time_domain_data['amorph'][dir][:,0]
+    		Y = time_domain_data['amorph'][dir][:,1]
+    		ax.plot(X, Y, color=colors[n], label=dir)
+    		ax.set_xlim(X[0], X[-1])
+    		# spectral intensities
+    		ax = axs[1]
+    		X = omega_array * au.fs * au.eV
+    		Y = np.abs(frequency_domain_data['amorph'][dir])**2
+    		Y /= np.max(Y)
+    		i1 = np.argmax(Y) # we'll need it to unwrap the spectral phase
+    		ax.plot(X, Y, color=colors[n], label=dir)
+    		ax.set_xlim(X[0], X[-1])
+    		# # spectral phases
+    		# ax = axs[2]
+    		# # X = omega_array * au.fs * au.eV
+    		# Y = np.angle(frequency_domain_data['amorph'][dir])
+    		# Y[i1:] = np.unwrap(Y[i1:])
+    		# Y[i1::-1] = np.unwrap(Y[i1::-1])
+    		# Y_min = min(Y_min, np.min(Y))
+    		# Y_max = max(Y_max, np.max(Y))
+    		# ax.plot(X, Y, label=dir)
+    		# ax.set_xlim(X[0], X[-1])
+    		# autocorrelations
+    		ax = axs[2]
+    		dt = time_domain_data['amorph'][dir][1,0] - \
+    			time_domain_data['amorph'][dir][0,0]
+    		Y = time_domain_data['amorph'][dir][:,1]
+    		N = len(Y)
+    		Y = scipy.signal.correlate(Y, Y, mode='full', method='direct')
+    		X = dt * np.arange(-(N-1), N)
+    		# ax.plot(X, Y, color=colors[n], label=dir)
+    		Y = scipy.signal.envelope(Y, residual=None)
+    		Y /= np.max(np.abs(Y))
+    		i1 = np.flatnonzero(X >= 0)[0]
+    		T2 = scipy.integrate.trapezoid(Y[i1:], X[i1:])
+    		ax.plot(X, Y, color=colors[n], label=dir+r"; $T_2={:.1f}$ fs".format(T2))
+    		ax.set_xlabel('time (fs)')
+    	# axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
+    	axs[2].set_xlim(0, 15)
+    	axs[2].set_ylim(0, 1)
+    	for i in range(3):
+    		axs[i].legend()
+    	plt.tight_layout()
+    	plt.savefig('amorph.pdf', format='pdf')
 
     perform_visualization2(FID_data_time_domain, omega_array, FID_data_frequency_domain)
     return
