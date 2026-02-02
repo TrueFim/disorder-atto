@@ -4,7 +4,7 @@ __generated_with = "0.19.7"
 app = marimo.App()
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     # Fourier analysis of the free-induction decay
@@ -21,7 +21,7 @@ def _():
     return pump_pulse_t0, subtract_non_FID_signal
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## Load the data and perform the Fourier transform
@@ -33,7 +33,7 @@ def _(mo):
 def _():
     import marimo as mo
     import attoworld as aw
-    from attoworld.personal.vlad import soft_window, Fourier_transform
+    from attoworld.personal.vlad import soft_window, Fourier_transform, coherence_time
     import numpy as np
     import scipy
     from matplotlib import pyplot as plt
@@ -46,6 +46,7 @@ def _():
         PdfPages,
         au,
         aw,
+        coherence_time,
         mo,
         np,
         os,
@@ -167,7 +168,7 @@ def _(FID_data_time_domain, Fourier_transform, au, np, soft_window):
     return FID_data_frequency_domain, omega_array
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## Compare the simulations with periodic and disordered lattices
@@ -181,6 +182,7 @@ def _(
     FID_data_time_domain,
     PdfPages,
     au,
+    coherence_time,
     np,
     omega_array,
     plt,
@@ -213,6 +215,7 @@ def _(
                     # time-domain plot
                     ax = axs[0]
                     X = time_domain_data[dir1][dir2][:, 0]
+                    dt = (X[-1] - X[0]) / (len(X) - 1)
                     Y = time_domain_data[dir1][dir2][:, 1]
                     ax.plot(X, Y, color=colors[n], label=labels[n])
                     ax.set_xlim(X[0], X[-1])
@@ -236,19 +239,14 @@ def _(
                     # ax.set_xlim(X[0], X[-1])
                     # autocorrelations
                     ax = axs[2]
-                    dt = (
-                        time_domain_data[dir1][dir2][1, 0]
-                        - time_domain_data[dir1][dir2][0, 0]
-                    )
                     Y = time_domain_data[dir1][dir2][:, 1]
+                    T2 = coherence_time(Y, dt=dt)
                     N = len(Y)
                     Y = scipy.signal.correlate(Y, Y, mode="full", method="direct")
                     X = dt * np.arange(-(N - 1), N)
                     # ax.plot(X, Y, color=colors[n], label=labels[n])
                     Y = np.abs(scipy.signal.envelope(Y, residual=None))
-                    Y /= np.max(np.abs(Y))
-                    i1 = np.flatnonzero(X >= 0)[0]
-                    T2 = 2.0 * scipy.integrate.trapezoid(Y[i1:] ** 2, X[i1:])
+                    Y /= np.max(Y)
                     ax.plot(
                         X,
                         Y,
@@ -284,6 +282,7 @@ def _(
     FID_data_frequency_domain,
     FID_data_time_domain,
     au,
+    coherence_time,
     np,
     omega_array,
     plt,
@@ -310,6 +309,7 @@ def _(
             # time-domain plot
             ax = axs[0]
             X = time_domain_data["amorph"][dir][:, 0]
+            dt = (X[-1] - X[0]) / (len(X) - 1)
             Y = time_domain_data["amorph"][dir][:, 1]
             ax.plot(X, Y, color=colors[n], label=dir)
             ax.set_xlim(X[0], X[-1])
@@ -333,19 +333,14 @@ def _(
             # ax.set_xlim(X[0], X[-1])
             # autocorrelations
             ax = axs[2]
-            dt = (
-                time_domain_data["amorph"][dir][1, 0]
-                - time_domain_data["amorph"][dir][0, 0]
-            )
             Y = time_domain_data["amorph"][dir][:, 1]
+            T2 = coherence_time(Y, dt=dt)
             N = len(Y)
             Y = scipy.signal.correlate(Y, Y, mode="full", method="direct")
             X = dt * np.arange(-(N - 1), N)
             # ax.plot(X, Y, color=colors[n], label=dir)
             Y = scipy.signal.envelope(Y, residual=None)
             Y /= np.max(np.abs(Y))
-            i1 = np.flatnonzero(X >= 0)[0]
-            T2 = 2.0 * scipy.integrate.trapezoid(Y[i1:] ** 2, X[i1:])
             ax.plot(
                 X,
                 Y,
