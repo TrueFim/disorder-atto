@@ -221,7 +221,7 @@ def _(
     				Y = np.abs(scipy.signal.envelope(Y, residual=None))
     				Y /= np.max(np.abs(Y))
     				i1 = np.flatnonzero(X >= 0)[0]
-    				T2 = scipy.integrate.trapezoid(Y[i1:], X[i1:])
+    				T2 = 2.0 * scipy.integrate.trapezoid(Y[i1:]**2, X[i1:])
     				ax.plot(X, Y, color=colors[n], label=labels[n]+
     					r"; $T_2={:.1f}$ fs".format(T2))
     				ax.set_xlabel('time (fs)')
@@ -307,7 +307,7 @@ def _(
     		Y = scipy.signal.envelope(Y, residual=None)
     		Y /= np.max(np.abs(Y))
     		i1 = np.flatnonzero(X >= 0)[0]
-    		T2 = scipy.integrate.trapezoid(Y[i1:], X[i1:])
+    		T2 = 2.0 * scipy.integrate.trapezoid(Y[i1:]**2, X[i1:])
     		ax.plot(X, Y, color=colors[n], label=dir+r"; $T_2={:.1f}$ fs".format(T2))
     		ax.set_xlabel('time (fs)')
     	# axs[2].set_ylim(max(-20, Y_min), min(20, Y_max))
