@@ -1,0 +1,192 @@
+\chapter{Real-Time Time-Dependent Density Functional Theory (RT-TDDFT)}
+\label{chap:tddft}
+
+
+
+\section{Theory and Principles of RT-TDDFT}
+
+\textcolor{red}{check again}
+
+Real-time time-dependent density functional theory (RT-TDDFT) is an \textit{ab initio} framework for simulating the electronic response of molecules and solids to time-dependent electromagnetic fields. 
+In contrast to frequency-domain (Casida-type) TDDFT, which computes excitation energies by solving an eigenvalue problem in the frequency domain, RT-TDDFT explicitly propagates the Kohn--Sham (KS) orbitals in real physical time and thus naturally describes ultrafast and nonlinear processes relevant for attosecond pump--probe spectroscopy.\cite{RungeGross1984,Yabana2012,Sato2025review}
+
+\subsection{Time-dependent Kohn--Sham equations}
+
+RT-TDDFT is based on the Runge--Gross theorem,\cite{RungeGross1984} which states that, for a given initial state, the time-dependent electron density $n(\mathbf r,t)$ uniquely determines the external potential up to a purely time-dependent gauge. 
+The interacting many-electron system is mapped onto a non-interacting KS system whose orbitals obey
+\begin{equation}
+  i\frac{\partial}{\partial t}\psi_{n\mathbf{k}}(\mathbf r,t)
+  = \hat{H}_{\mathrm{KS}}[n](t)\,\psi_{n\mathbf{k}}(\mathbf r,t),
+  \label{eq:TDKS}
+\end{equation}
+with the Hamiltonian
+\begin{equation}
+  \hat{H}_{\mathrm{KS}}(t)
+  = \frac{1}{2}\left[-i\nabla + \mathbf A(t)\right]^2
+    + v_{\mathrm{ion}}(\mathbf r)
+    + v_{\mathrm{H}}[n](\mathbf r,t)
+    + v_{\mathrm{xc}}[n](\mathbf r,t),
+\end{equation}
+where $v_{\mathrm{ion}}$ is the ionic potential (typically represented by norm-conserving pseudopotentials), $v_{\mathrm{H}}$ is the Hartree potential and $v_{\mathrm{xc}}$ is the exchange--correlation (XC) potential. 
+The time-dependent vector potential $\mathbf A(t)$ represents the applied laser field in the velocity gauge; an equivalent formulation in the length gauge uses a time-dependent scalar potential instead.\cite{Yabana2012,Sato2014}
+
+The time-dependent density is reconstructed from the occupied KS orbitals:
+\begin{equation}
+  n(\mathbf r,t)
+  = \sum_{n\mathbf{k}} f_{n\mathbf{k}}
+    \left|\psi_{n\mathbf{k}}(\mathbf r,t)\right|^2,
+    \label{eq:KS_density}
+\end{equation}
+where $f_{n\mathbf{k}}$ are the occupation numbers (typically Fermi--Dirac factors for the ground state).
+Equations~\eqref{eq:TDKS}--~\eqref{eq:KS_density} are discretized on a real-space grid or in a plane-wave basis and integrated using unitary propagators, such as the enforced time-reversal symmetry (ETRS) scheme or midpoint propagators.\cite{Yabana2012,Sato2014}
+
+\subsection{Exchange--correlation potentials in RT-TDDFT}
+
+% The central approximation in practical RT-TDDFT is the choice of the time-dependent XC potential $v_{\mathrm{xc}}[n](\mathbf r,t)$.
+% In most applications, including this work, one uses the \emph{adiabatic} approximation,
+% \begin{equation}
+%   v_{\mathrm{xc}}[n](\mathbf r,t)
+%   \approx v_{\mathrm{xc}}^{\mathrm{gs}}[n(\mathbf r,t)],
+% \end{equation}
+% i.e.\ the ground-state XC functional is evaluated at the instantaneous density.
+% This neglects XC memory effects but has proven accurate for early-time, coherent dynamics in solids and molecules.\cite{Botti2007,Sato2025review}
+
+From the point of view of ground-state DFT, the most widely used families of functionals are:
+
+\begin{itemize}
+  \item \textbf{Local density approximation (LDA):} $E_{\mathrm{xc}}[n] = \int \epsilon_{\mathrm{xc}}(n(\mathbf r))\,n(\mathbf r)\,d\mathbf r$, where the XC energy density $\epsilon_{\mathrm{xc}}$ is that of a homogeneous electron gas at density $n(\mathbf r)$. 
+  Typical examples: Perdew--Zunger (PZ) parameterization of the Ceperley--Alder data.\cite{Botti2007}
+
+  \item \textbf{Generalized gradient approximations (GGA):} $E_{\mathrm{xc}}[n] = \int f(n(\mathbf r),\nabla n(\mathbf r))\,d\mathbf r$, which include gradient corrections to the local density. 
+  Popular choices include PBE-GGA and related functionals.\cite{Botti2007}
+
+  \item \textbf{Meta-GGA and TB-mBJ-type potentials:} these functionals additionally depend on the kinetic-energy density or on the KS orbitals themselves and can provide improved band gaps and band structures in solids. The Tran--Blaha modified Becke--Johnson (TB-mBJ) potential is a widely used meta-GGA-type exchange potential for this purpose.\cite{Botti2007}
+\end{itemize}
+
+% In the adiabatic approximation, any of these ground-state functionals can be used as $v_{\mathrm{xc}}^{\mathrm{gs}}$ in real time. 
+% For extended systems, the choice of functional is particularly important because it sets the quality of the band gap and the band dispersion, which in turn control interband transition energies and effective masses in the RT-TDDFT simulation.
+
+\subsection{Exchange--correlation potentials in SALMON}
+
+The RT-TDDFT simulations in this thesis are performed with the SALMON (Scalable \textit{Ab initio} Light--Matter Simulator for Optics and Nanoscience) code.\cite{Noda2019}
+SALMON is a real-space, real-time TDDFT package designed for molecules, nanostructures, and periodic solids, efficiently parallelized to handle systems with up to thousands of atoms.\cite{Noda2019}
+
+In SALMON, the XC potential is specified in the \texttt{\&functional} namelist.\cite{SALMONmanual}
+For periodic systems such as crystalline silicon, the following adiabatic XC choices are available:
+
+\begin{itemize}
+  \item \textbf{PZ-LDA} (\texttt{xc='PZ'}): the Perdew--Zunger local-density approximation,\cite{SALMONmanual} which is the default in SALMON and provides a computationally efficient description of ground-state and time-dependent properties.
+
+  \item \textbf{PZM-LDA} (\texttt{xc='PZM'}): a modified Perdew--Zunger LDA that improves the smooth connection between high- and low-density regions.\cite{SALMONmanual}
+
+  \item \textbf{TB-mBJ meta-GGA} (\texttt{xc='TBmBJ'}): the Tran--Blaha modified Becke--Johnson potential combined with Perdew--Wang correlation,\cite{SALMONmanual} which is known to yield significantly improved band gaps for many semiconductors and insulators compared to standard LDA/GGA functionals.
+
+  \item \textbf{Libxc LDA/GGA and meta-GGA functionals:} since version 1.1.0, SALMON can interface with the Libxc library, allowing a variety of LDA and GGA functionals (and meta-GGA for periodic systems) to be used by specifying \texttt{alibx/alibc} or \texttt{alibxc} identifiers.\cite{SALMONmanual}
+\end{itemize}
+
+Hybrid XC functionals (e.g.\ hybrid GGA/meta-GGA) are not supported in the current SALMON versions.\cite{SALMONmanual}
+In practice, for silicon and related semiconductors, one typically uses PZ-LDA or PBE-GGA for ground-state calculations and then propagates in real time with the corresponding adiabatic XC.
+When an accurate band gap is essential (e.g.\ for optical spectra), TB-mBJ or a suitable meta-GGA can be employed.\cite{Noda2019}
+
+All SALMON calculations rely on norm-conserving pseudopotentials in a real-space format (e.g.\ Troullier--Martins-type), which define $v_{\mathrm{ion}}$ in the KS Hamiltonian.\cite{Noda2019,SALMONmanual}
+
+\subsection{Linear and nonlinear optical response}
+
+RT-TDDFT can be applied in both linear and nonlinear regimes:
+
+\begin{itemize}
+  \item In \emph{linear response}, a weak impulsive field is applied and the induced current or polarization is Fourier transformed to obtain optical spectra and dielectric functions.\cite{Yabana2012}
+
+  \item In the \emph{nonlinear regime}, strong, few-cycle pulses are used and the full time-dependent current $J(t)$ and polarization $P(t)$ are analyzed.
+        This allows one to describe high-harmonic generation, dynamical Franz--Keldysh and Stark shifts, and sub-cycle pump--probe signals in solids.\cite{Uemoto2019,Goncharov2013,Sato2025review}
+\end{itemize}
+
+Because SALMON works in real space, structural disorder, defects, and amorphous configurations are included explicitly by the ionic coordinates.\cite{Bondi2010,Dnaya2024}
+This is particularly advantageous for the present work, which focuses on attosecond optical spectroscopy of disordered media.
+
+%============================================================
+\section{Ultrafast Electron Dynamics in Silicon and the Validity Window of RT-TDDFT}
+
+To understand what aspects of silicon's ultrafast response can be described reliably by RT-TDDFT, it is useful to summarize the hierarchy of microscopic processes triggered by a few-femtosecond optical excitation and to discuss how these processes appear (or do not appear) in the RT-TDDFT framework.
+
+\subsection{Microscopic processes and time scales in silicon}
+
+After an ultrashort optical pump, several distinct processes occur:
+
+\paragraph{(i) Coherent interband excitation and polarization (attoseconds--few femtoseconds).}
+During the pump pulse, the electric field induces coherent transitions from valence to conduction bands and generates an interband polarization.
+Attosecond XUV transient absorption in crystalline Si resolves step-like changes in the absorption synchronized with each half-cycle of the driving field, with a rise time of $\sim 450$\,as.\cite{Schultze2014}
+This step provides an \emph{upper bound} for the time scale of carrier-induced band-gap reduction and the onset of electron--electron (e--e) interactions in the conduction band.\cite{Schultze2014}
+RT-TDDFT with adiabatic XC reproduces both the sub-fs population transfer and the associated band-edge shift in this regime.\cite{Schultze2014,Yabana2012,Sato2025review}
+
+\paragraph{(ii) Mean-field screening and band-gap renormalization (1--5\,fs).}
+The injected carriers screen the Coulomb interaction and modify the KS potential, leading to a transient band-gap renormalization and broadening of core-level features.
+RT-TDDFT captures the mean-field (Hartree + adiabatic XC) contribution to this effect and reproduces the \emph{temporal profile} of the band-edge shift observed experimentally, although the magnitude is typically underestimated because correlation effects beyond adiabatic XC are neglected.\cite{Schultze2014,Botti2007}
+
+\paragraph{(iii) Intraband acceleration and strong-field effects (during the pulse).}
+In addition to interband excitation, the pump field accelerates carriers within bands, creating intraband currents and causing strong-field phenomena such as dynamical Franz--Keldysh and Stark shifts; in sufficiently strong fields, high-harmonic generation is observed.
+RT-TDDFT is well suited for this regime and has been used extensively to model nonlinear polarization and HHG in solids.\cite{Yabana2012,Uemoto2019,Sato2025review}
+
+\paragraph{(iv) Disorder-induced dephasing (5--20\,fs).}
+In disordered or amorphous silicon, variations in local bonding lead to distributions of transition energies and local band gaps.
+Even without explicit scattering, this ``static'' inhomogeneity causes dephasing of the macroscopic polarization on time scales of a few to $\sim 20$\,fs.\cite{Bondi2010,Dnaya2024,Chopra2022}
+Such inhomogeneous broadening is naturally included in RT-TDDFT when the disordered structure is explicitly represented in the supercell.
+
+\paragraph{(v) Electron--electron scattering and correlation build-up.}
+
+Here it is important to distinguish between different aspects of e--e dynamics:
+
+\begin{itemize}
+  \item \emph{Instantaneous e--e interaction and screening} are fully present in RT-TDDFT via the Hartree and XC potentials.
+        They are responsible for the very fast (sub-fs) onset of band-gap renormalization observed in attosecond experiments.\cite{Schultze2014}
+
+  \item \emph{Collisional e--e scattering and thermalization}---i.e.\ irreversible redistribution of energy and momentum among carriers leading to a hot Fermi--Dirac distribution---require two-particle correlation effects (imaginary parts of self-energies) that are \emph{not} explicitly included in RT-TDDFT.
+\end{itemize}
+
+Many-body simulations based on nonequilibrium Green's functions and GW self-energies, as well as hot-carrier calculations in silicon, find that e--e scattering responsible for energy and momentum redistribution acts on multi-femtosecond time scales, from a few fs up to several tens of fs depending on carrier energy and density.\cite{Marini2013,Sangalli2015,Sjakste2025,Bernardi2014}
+Experimentally, attosecond spectroscopy in Si shows that the initial band-edge shift is completed within $\lesssim 1$\,fs,\cite{Schultze2014} while pump--probe and THz measurements probe effective e--e and e--h scattering rates in the range of a few to tens of femtoseconds.\cite{Sjakste2025}
+
+From the perspective of RT-TDDFT, this means:
+
+\begin{itemize}
+  \item On sub-fs and few-fs time scales, the evolution is well described by a \emph{collisionless} mean-field dynamics, which RT-TDDFT accurately provides.
+  \item On longer times ($\gtrsim 10$\,fs), genuine collisional e--e scattering gradually drives the system toward a thermal distribution; this process is only partially mimicked in RT-TDDFT (through dephasing due to band dispersion and disorder), but not fully captured.
+\end{itemize}
+
+Therefore, RT-TDDFT does not make the dynamics ``unphysical'' at 5--30\,fs, but it describes only the coherent or quasi-collisionless component of the e--e dynamics.
+Irreversible thermalization requires methods beyond TDDFT.
+
+\paragraph{(vi) Electron--phonon scattering and intervalley relaxation (50--300\,fs).}
+Coupling to phonons leads to momentum relaxation, intervalley transfer and cooling of hot carriers.
+Time-resolved experiments and ab initio calculations report intravalley momentum relaxation times of $\sim 20$--$60$\,fs and cooling/thermalization within $\sim 150$--$350$\,fs, depending on excitation conditions.\cite{Cushing2018,Worle2021,Tanimura2019,Bernardi2014}
+These processes are not explicitly present in RT-TDDFT (unless ionic motion and non-adiabatic couplings are included in a more elaborate scheme).
+
+\paragraph{(vii) Lattice dynamics (tens of fs--ps).}
+On longer time scales, coherent optical phonons (in crystalline samples) and general lattice heating modify the band structure and optical response.\cite{Otobe2010,Shinohara2010}
+In highly disordered media, coherent phonons are strongly damped and structural relaxation occurs on $\gtrsim 100$\,fs to ps time scales.
+
+\subsection{Validity window of RT-TDDFT for attosecond pump--probe simulations}
+
+The above hierarchy of processes implies a natural ``validity window'' for adiabatic RT-TDDFT in silicon:
+
+\begin{itemize}
+  \item RT-TDDFT is \emph{quantitatively reliable} for the early-time, coherent regime dominated by:
+  \begin{itemize}
+    \item coherent interband excitation and polarization build-up,
+    \item mean-field screening and ultrafast band-gap renormalization,
+    \item intraband acceleration and strong-field nonlinearities,
+    \item disorder-induced inhomogeneous dephasing,
+  \end{itemize}
+  i.e.\ for times $\lesssim 20$--$30$\,fs, and particularly in the sub-fs to few-fs range characteristic of attosecond spectroscopy.\cite{Schultze2014,Yabana2012,Sato2025review}
+  
+  \item For longer time scales ($\gtrsim 30$--$50$\,fs), RT-TDDFT still provides qualitatively meaningful information about how the coherent component of the electron dynamics and static disorder shape the transient optical response, but it does \emph{not} describe:
+  \begin{itemize}
+    \item irreversible e--e thermalization,
+    \item e--ph-driven momentum relaxation and cooling,
+    \item full approach to a hot Fermi--Dirac distribution.
+  \end{itemize}
+  Quantitative modeling of these processes requires explicit e--e and e--ph scattering, e.g.\ within nonequilibrium Green's functions or Boltzmann equations with \textit{ab initio} scattering rates.\cite{Sjakste2025,Bernardi2014}
+\end{itemize}
+
+In the context of this thesis, which focuses on attosecond optical pump--probe spectroscopy of disordered silicon with pump pulses of a few femtoseconds, the main observables of interest (pump-induced changes in the transient absorption or reflectivity at delays of up to a few tens of femtoseconds) lie predominantly within this coherent validity window.
+RT-TDDFT with adiabatic XC, as implemented in SALMON, is therefore well suited to capture the essential physics: direct interband excitation without momentum change, ultrafast screening and band-edge shifts, nonlinear polarization, and dephasing due to structural disorder.

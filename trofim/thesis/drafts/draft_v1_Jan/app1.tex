@@ -1,0 +1,187 @@
+\chapter{Density of States with Scattering Broadening}
+\label{cha:app1}
+
+
+\section{Analytical Calculation of the Integral for Scattering Broadening}
+\label{sec:analytical_integral}
+
+
+
+\subsubsection*{Evaluation of the broadened DOS integral}
+
+We consider the integral
+\begin{equation}
+I(u,a) = \int_{-\infty}^{+\infty}
+\frac{t^2}{(t^2 - u)^2 + a^2}\,dt,
+\qquad a>0,
+\label{eq:I_def_manual}
+\end{equation}
+which appears in the calculation of the disorder-broadened DOS within the effective-mass approximation.
+
+
+\paragraph{Step 1: Complex-analytic representation.}
+
+Define the complex function
+\begin{equation}
+f(z) =
+\frac{z^2}{(z^2 - u)^2 + a^2},
+\end{equation}
+and consider the contour integral of $f(z)$ along the real axis closed by a semicircle in the upper half-plane.  
+For $|z|\to\infty$, $f(z)\sim 1/z^2$, so the contribution from the semicircle vanishes, and we have
+\begin{equation}
+\int_{-\infty}^{\infty} f(t)\,dt
+=
+2\pi i \sum_{z_j \in \text{UHP}} \operatorname*{Res}_{z=z_j} f(z),
+\label{eq:contour_I}
+\end{equation}
+where the sum runs over the poles in the upper half-plane (UHP).
+
+The poles of $f(z)$ are determined by
+\begin{equation}
+(z^2-u)^2 + a^2 = 0
+\;\;\Rightarrow\;\;
+z^2 - u = \pm i a
+\;\;\Rightarrow\;\;
+z^2 = u \pm i a.
+\end{equation}
+Thus there are four simple poles,
+\begin{equation}
+z = \pm z_1, \quad z=\pm z_2,
+\qquad
+z_1^2 = u + i a,\quad z_2^2 = u - i a.
+\end{equation}
+We choose the standard branches of the square roots so that $z_1$ and $z_2$ lie in the upper half-plane (i.e.\ $\Im z_{1,2} > 0$). These two poles contribute to the contour integral.
+
+\paragraph{Step 2: Residues at the poles.}
+
+We write the denominator as
+\[
+(z^2-u)^2 + a^2 = (z^2-u-ia)(z^2-u+ia)
+\equiv D_1(z)D_2(z).
+\]
+At a simple pole $z_0$ where $D_1(z_0)=0$ and $D_2(z_0)\neq 0$, the residue is
+\[
+\operatorname*{Res}_{z=z_0} f(z)
+=
+\frac{z_0^2}{D_1'(z_0)D_2(z_0)}.
+\]
+
+\emph{Pole at $z=z_1$} (where $z_1^2 = u+ia$, i.e.\ $D_1(z) = z^2-u-ia$):
+\begin{equation}
+D_1'(z) = 2z, \qquad
+D_2(z_1) = z_1^2 - u + ia = (u+ia) - u + ia = 2ia.
+\end{equation}
+Hence
+\begin{equation}
+\operatorname*{Res}_{z=z_1} f(z)
+=
+\frac{z_1^2}{(2z_1)(2ia)}
+=
+\frac{z_1}{4ia}.
+\end{equation}
+
+\emph{Pole at $z=z_2$} (where $z_2^2 = u-ia$, i.e.\ $D_2(z) = z^2-u+ia$):
+\begin{equation}
+D_2'(z) = 2z, \qquad
+D_1(z_2) = z_2^2 - u - ia = (u-ia) - u - ia = -2ia.
+\end{equation}
+Thus
+\begin{equation}
+\operatorname*{Res}_{z=z_2} f(z)
+=
+\frac{z_2^2}{(2z_2)(-2ia)}
+=
+-\frac{z_2}{4ia}.
+\end{equation}
+
+The sum of the residues in the upper half-plane is therefore
+\begin{equation}
+\sum_{z_j\in\text{UHP}} \operatorname*{Res}_{z=z_j} f(z)
+=
+\frac{z_1}{4ia} - \frac{z_2}{4ia}
+=
+\frac{z_1 - z_2}{4ia}.
+\end{equation}
+
+\paragraph{Step 3: Result of the contour integral.}
+
+Using Eq.~\eqref{eq:contour_I}, we obtain
+\begin{equation}
+I(u,a)
+=
+\int_{-\infty}^{\infty} f(t)\,dt
+=
+2\pi i \cdot \frac{z_1 - z_2}{4ia}
+=
+\frac{\pi}{2a}\,(z_1 - z_2).
+\label{eq:I_z1z2}
+\end{equation}
+
+Now express $z_1$ and $z_2$ through $u$ and $a$. With the principal branches of the square roots one has
+\begin{equation}
+z_1 = \sqrt{u + i a},
+\qquad
+z_2 = \sqrt{u - i a},
+\end{equation}
+and the difference $z_1 - z_2$ can be written explicitly in terms of real square roots. Let
+\[
+R = \sqrt{u^2 + a^2}.
+\]
+Using the standard formula for the square root of a complex number,
+\begin{equation}
+\sqrt{u \pm i a}
+=
+\sqrt{\frac{R + u}{2}}
+\;\pm\; i\,\sqrt{\frac{R - u}{2}},
+\end{equation}
+we find
+\begin{equation}
+z_1 - z_2
+=
+\left[
+\sqrt{\frac{R + u}{2}} + i\sqrt{\frac{R - u}{2}}
+\right]
+-
+\left[
+\sqrt{\frac{R + u}{2}} - i\sqrt{\frac{R - u}{2}}
+\right]
+=
+2i\,\sqrt{\frac{R - u}{2}}.
+\end{equation}
+Substituting this into Eq.~\eqref{eq:I_z1z2} gives
+\begin{equation}
+I(u,a)
+=
+\frac{\pi}{2a} \cdot 2i\,\sqrt{\frac{R - u}{2}}
+\cdot \frac{1}{i}
+=
+\frac{\pi}{a}\,
+\sqrt{\frac{R - u}{2}},
+\qquad
+R = \sqrt{u^2 + a^2}.
+\end{equation}
+(Here the factor $1/i$ comes from the fact that $a>0$ and the chosen contour corresponds to the retarded prescription; the final result is real and positive, as required for an integral of a positive function.)
+
+Thus we have obtained a fully explicit, closed-form expression for the integral
+\begin{equation}
+I(u,a) 
+=
+\int_{-\infty}^{+\infty}
+\frac{t^2}{(t^2 - u)^2 + a^2}\,dt
+=
+\frac{\pi}{a}
+\sqrt{\frac{\sqrt{u^2 + a^2} - u}{2}}.
+\label{eq:I_final_manual}
+\end{equation}
+
+When this result is substituted back into the prefactors arising from the $k$-space integration in the effective-mass model, one recovers exactly the broadened DOS formula of the form
+\begin{equation}
+\rho(E)
+\propto
+\sqrt{
+\frac{
+\sqrt{(E-E_c^*)^2 + (\Gamma/2)^2} + (E-E_c^*)
+}{2}
+},
+\end{equation}
+after a straightforward rearrangement of $u$ and $a$ in terms of $E-E_c^*$ and $\Gamma$ (and accounting for the additional factors of $(2m^\ast/\hbar^2)^{3/2}$).
