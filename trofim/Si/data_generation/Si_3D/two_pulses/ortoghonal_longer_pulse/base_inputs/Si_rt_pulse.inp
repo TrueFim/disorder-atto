@@ -116,7 +116,7 @@
   !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
   ae_shape2 = 'Acos4'
   !peak intensity(W/cm^2) of the incident pulse 2d12 (as in article) or 5d11 --- pump
-  I_wcm2_2 = 1d12
+  I_wcm2_2 = 2d11
   !duration of the incident pulse
   tw2 = 9d0
   !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
