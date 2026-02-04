@@ -448,7 +448,7 @@ for folder_name in sorted_folders:
 
     plt.savefig("analysis/dos/ims/full/" + folder_name + ".png", dpi=200)
 
-    with open("analysis/dos/data/full/" + folder_name + ".csv", "w", newline="") as f:
+    with open("analysis/dos/data/full/dos_full_" + folder_name + ".csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["Energy [eV]", "DOS [1/eV]"])   # заголовок (по желанию)
         writer.writerows(zip(energy_vals, delta_sum))
@@ -482,7 +482,7 @@ for folder_name in sorted_folders:
 
     plt.savefig("analysis/dos/ims/bandgap/" + folder_name + ".png", dpi=200)
 
-    with open("analysis/dos/data/bandgap/" + folder_name + ".csv", "w", newline="") as f:
+    with open("analysis/dos/data/bandgap/dos_bandgap_" + folder_name + ".csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["Energy [eV]", "DOS [1/eV]"])   # заголовок (по желанию)
         writer.writerows(zip(energy_vals[int(num_points*p1):int(num_points*p2)], delta_sum[int(num_points*p1):int(num_points*p2)]))
