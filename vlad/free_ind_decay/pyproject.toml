@@ -5,5 +5,5 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "attoworld>=2026.1.1",
+    "attoworld>=2026.1.2",
 ]
