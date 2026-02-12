@@ -39,9 +39,9 @@
   yn_ffte = 'y'
   
   
-  nproc_ob=4
-  nproc_rgrid=3,2,3
-  nproc_k=125
+  nproc_ob=1
+  nproc_rgrid=1,1,1
+  nproc_k=16
 /
 
 &system
@@ -98,7 +98,7 @@
   !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
   ae_shape1 = 'Acos2'
   !peak intensity(W/cm^2) of the incident pulse 7d9 (1/4 k_B) or 3d10 (1/2 k_B) --- probe
-  I_wcm2_1 = 3.5d9
+  I_wcm2_1 = 3d10
   !duration of the incident pulse
   tw1 = 12d0
   !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
@@ -111,7 +111,7 @@
   !envelope shape of the incident pulse('Acos2': cos^2 type envelope for vector potential)
   ae_shape2 = 'Acos4'
   !peak intensity(W/cm^2) of the incident pulse 2d12 (as in article) or 5d11 --- pump
-  I_wcm2_2 = 6d11
+  I_wcm2_2 = 5d11
   !duration of the incident pulse
   tw2 = 5.8d0
   !mean photon energy(average frequency multiplied by the Planck constant) of the incident pulse
@@ -132,6 +132,9 @@
   !energy grid size and number of energy grids for output files
   de      = 0.01d0
   nenergy = 3000
+  
+  projection_option = 'td'
+  out_projection_step = 16000
 /
 
 &atomic_red_coor
