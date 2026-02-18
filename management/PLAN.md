@@ -1,49 +1,52 @@
 # Project Plan: Optical attosecond spectroscopy of disordered media
 
-**Last Sync:** 2026-02-02
+**Last Sync:** 2026-02-18
 
-## Status: 🟢 (On Track – Final Push)
-*Rationale:* The coherence time metric is finalized: **Mandel's coherence time** (power-equivalent width of the analytic envelope of the autocorrelation). Implemented and validated in `Fourier_analysis.py`. Combined with the validated Drude model for transport, all methodological tools are now in place. The deadline (2026-03-01) is ~4 weeks away. Remaining work is execution: tabulate $\tau_\mathrm{coh}$ across disorder cases, correlate with $\gamma$, and write.
+## Status: 🟡 (Caution – Timeline Slipping)
+*Rationale:* Thesis deadline is **2026-03-01** (10 days). The mid-February milestone for disorder-dependence plots was missed — Trofim has not yet produced $\gamma(s)$, $m^*(s)$, $\alpha(s)$, $\tau_\mathrm{coh}(s)$ plots. Additionally, the key expected result — a $\tau_\mathrm{coh}$–$\gamma$ correlation — is **not confirmed**: preliminary data shows Mandel's $\tau_\mathrm{coh}$ (from $J_z$, pump-only) does not correlate with Drude's $\gamma$ (from $J_x$, pump-probe). An alternative metric is under investigation. The probe-induced dephasing signal is observed but not yet compared to the perfect crystal case. The next ~5 days are critical for resolving the correlation question and producing plots.
 
 ## Active Workflows
 
 ### Current Path: Dual-Track Physics Extraction (Transport + FID)
-*Rationale:* The orthogonal pump-probe protocol delivers two distinct observables: (1) the slowly-varying current component revealing momentum relaxation and effective mass physics, and (2) the fast dipole oscillations revealing dephasing and spectral restructuring. Both show systematic disorder dependence. The thesis will argue that disorder modifies ultrafast dynamics through a unified mechanism—scattering off the disordered potential—manifesting differently in intraband (transport) and interband (coherence) channels.
+*Rationale:* Transport (Drude model) is well-established. FID phenomenology is documented. The key open question is whether a quantitative link between transport and coherence exists.
 
 ### Immediate Next Steps (Priority Order)
-1.  **[DONE]** ~~Dipole Oscillations (FID) Decision Point~~ → **Included in thesis.**
-2.  **[IN PROGRESS]** **FID Quantification:** Extract coherence times $\tau_\mathrm{coh}$ from autocorrelation analysis.
-    - **Metric finalized:** Mandel's coherence time — the power-equivalent width of the normalized analytic envelope of the autocorrelation: $\tau_\mathrm{coh} = 2 \int_0^{\infty} |\mathcal{R}(\tau)/\mathcal{R}(0)|^2\, d\tau$, where $\mathcal{R}(\tau) = R(\tau) + i\mathcal{H}\{R(\tau)\}$. Validated analytically: gives $\tau_\mathrm{coh} = 1/\gamma$ for exponential decay. Progress report: `progress/2026-02-02 coherence time/`.
-    - **Implementation done:** `Fourier_analysis.py` computes $\tau_\mathrm{coh}$ for all cases using `scipy.signal.envelope` + `scipy.integrate.trapezoid`. Values displayed on autocorrelation envelope plots.
-    - **Remaining:** (a) Tabulate $\tau_\mathrm{coh}$ systematically for all disorder cases. (b) Compute spectral width $\sigma_\omega$ as consistency check ($\tau_\mathrm{coh} \sim 1/\sigma_\omega$). (c) Investigate the 1.4d10_8d12 anomaly (broad spectrum). (d) Analyze pump-only $J_z(t)$ to test for probe-induced dephasing. (e) Note qualitatively that periodic lattice shows revivals (discrete-spectrum beating) while disordered cases show monotonic decay (true dephasing).
-3.  **Correlate FID and Transport:** Plot $\tau_\mathrm{coh}$ vs. $\gamma$ to test whether coherence time correlates with momentum relaxation rate. If a clear relationship exists, this unifies the two phenomena.
-4.  **Disorder Dependency Plots:** Trofim to systematically plot $\gamma(s)$, $m^*(s)$, $\alpha(s)$, and $\tau_\mathrm{coh}(s)$ where $s$ quantifies disorder (RMS atomic displacement or SOAP metric).
-5.  **DOS-FID Link:** Check whether the observed spectral peaks in FID can be matched to features in DOS plots. Can DOS broadening predict $\tau_\mathrm{coh}$?
-6.  **Carrier Concentration Extraction:** Extract carrier concentrations to decouple effective mass from carrier density.
-7.  **Energy Distribution Analysis:** Investigate whether disorder alters the energy distribution of photoinjected carriers. Lower priority now that FID is confirmed, but still valuable for understanding spectral red shift.
+1.  **[URGENT – Trofim]** **Produce disorder-dependence plots:** $\gamma(s)$, $m^*(s)$, $\alpha(s)$, $\tau_\mathrm{coh}(s)$ for all available cases. These are critical for the thesis; must be done immediately.
+2.  **[IN PROGRESS]** **Resolve the $\tau_\mathrm{coh}$–$\gamma$ correlation question:**
+    - Mandel's $\tau_\mathrm{coh}$ from $J_x(t)$ (pump-probe) shows **no correlation** with $\gamma$ (preliminary).
+    - Trofim's alternative: exponential fit to local maxima of $J_z(t)$ (pump-only) produces values close to $\gamma$. Methodologically shaky (manual outlier exclusion; inapplicable to perfect crystal).
+    - **Next step (Vlad):** Produce new version of `ensemble_dephasing.ipynb` replacing time-frequency analysis with autocorrelation-based analysis.
+    - **Next step (Trofim):** If the autocorrelations in `ensemble_dephasing.ipynb` look like steadily decaying signals, fit an exponential to the maxima of the autcorrelation function. If this produces prominent results, apply the method to the **autocorrelation of $J_z(t)$** instead of the raw signal. 
+3.  **[URGENT – Trofim]** **Probe-induced dephasing comparison:** Compare $J_z(t)$ dephasing in pump-probe vs. pump-only for both disordered AND perfect crystal cases. If disorder induces probe-induced dephasing, this is a major finding. If not, then it's just one of the many interesting observations.
+4.  **DOS-FID Link:** Check whether spectral peaks in FID match DOS features. Can DOS broadening quantitatively predict $\tau_\mathrm{coh}$?
+5.  **Carrier Concentration Extraction:** Extract carrier concentrations to decouple effective mass from carrier density.
+6.  **Energy Distribution Analysis:** Lowest priority; defer if time is insufficient.
 
 ## Strategic Context
 
-### Core Hypothesis (Revised)
+### Core Hypothesis (Under Pressure)
 Disorder influences femtosecond-scale nonlinear optical response through **scattering off the disordered potential**, which manifests in two complementary channels:
 
-1. **Transport (intraband):** Momentum relaxation captured by Drude model with $\Delta m^*(t) \propto A^4(t)$. Disorder increases $\gamma$ and reduces effective mass variation (more uniform band population).
+1. **Transport (intraband):** Momentum relaxation captured by Drude model with $\Delta m^*(t) = \alpha A^4(t)$. Disorder increases $\gamma$ and reduces effective mass variation (more uniform band population). *(Well-established.)*
 
-2. **Coherence (interband):** Dephasing of dipole oscillations. Disorder accelerates decay, red-shifts the spectrum, and restructures discrete crystal peaks into a single low-frequency feature. The spectral phase flattens, suggesting more synchronized oscillators.
+2. **Coherence (interband):** Dephasing of dipole oscillations along the pump direction. Disorder accelerates decay, red-shifts the spectrum, restructures discrete crystal peaks into a single low-frequency feature. *(Well-established qualitatively.)*
 
-Both effects arise from the same underlying physics but probe different aspects: intraband scattering vs. interband coherence loss. A quantitative correlation between $\tau_\mathrm{coh}$ and $\gamma$ would strongly support this unified picture.
+**Unifying link under question:** A quantitative $\tau_\mathrm{coh}$–$\gamma$ correlation would strongly support the unified picture, but preliminary results with Mandel's metric are negative. A more systematic investiation of FID ib both $J_x(t)$ and $J_z(t)$ is necessary to make a final conclusion.
+
+**Contingency:** If no quantitative correlation is found, the thesis narrative shifts to: "Disorder modifies both transport and coherence through the same scattering mechanism, but the two channels probe different physical regimes and cannot be simply related via a single parameter."
 
 ### Key Uncertainties
-*   **$\tau_\mathrm{coh}$–$\gamma$ Correlation (High priority):** Do coherence time and momentum relaxation rate scale together? If yes, the thesis has a unifying result. If no, there's interesting physics to explain.
-*   **Probe-Induced Dephasing (Open):** Does the probe pulse accelerate dephasing beyond intrinsic disorder effects? Pump-only $J_z(t)$ analysis will resolve this.
-*   **Anomalous High-Frequency Emergence (Open):** The 1.4d10_8d12 case shows delayed appearance of high-frequency spectral components. If physical, this is a potential discovery (probe-induced excited-state absorption?). Trofim investigating.
-*   **Microscopic Origin (Open):** Can DOS broadening quantitatively predict $\tau_\mathrm{coh}$ and $\alpha$? Jankousky et al. (Nature Physics 2026) provides the template: $\mu = |e|\hbar/(2\Delta E \cdot m^*)$.
+*   **$\tau_\mathrm{coh}$–$\gamma$ Correlation (Critical):** Mandel's metric (from $J_x$, pump-probe) shows no correlation. Alternative metric (fit to $J_z$ autocorrelation maxima, pump-only) under investigation. Resolution needed in days.
+*   **Probe-Induced Dephasing (Partially observed):** Probe significantly accelerates $J_z$ dephasing in disordered case. Crystal comparison pending. If the effect is disorder-specific, it becomes a key finding.
+*   **Conceptual distinction from Purschke et al.:** TDDFT FID = unitary inhomogeneous broadening. Purschke et al. = phenomenological spatial dissipation $\Gamma_\mathrm{RS}$. These are distinct mechanisms; the pump-only vs. pump-probe comparison discriminates between them.
+*   **Anomalous High-Frequency Emergence (Open):** The 1.4d10_8d12 case shows delayed high-frequency components. If physical, this may indicate probe-induced excited-state absorption.
+*   **Microscopic Origin (Open):** Can DOS broadening quantitatively predict $\tau_\mathrm{coh}$ and $\alpha$? Template: Jankousky et al. $\mu = |e|\hbar/(2\Delta E \cdot m^*)$.
 
 ### Success Criteria for Thesis Completion
-By **mid-February 2026**, Trofim must have:
-1. Quantitative disorder-dependence plots for all model parameters ($\gamma$, $m^*$, $\alpha$, $\tau_\mathrm{coh}$)
-2. $\tau_\mathrm{coh}$ vs. $\gamma$ correlation plot
-3. Pump-only $J_z(t)$ analysis for comparison with pump-probe $J_x(t)$
-4. Draft thesis outline with figures for both transport and FID chapters
+By **2026-03-01** (thesis deadline), the required deliverables are:
+1. Quantitative disorder-dependence plots: $\gamma(s)$, $m^*(s)$, $\alpha(s)$, $\tau_\mathrm{coh}(s)$ *(not yet done — critical)*
+2. Resolution of the $\tau_\mathrm{coh}$–$\gamma$ correlation question (positive or negative, with physical interpretation)
+3. Pump-only $J_z(t)$ vs. pump-probe comparison for crystal and disordered cases
+4. Complete thesis draft with figures for both transport and FID chapters
 
-**Thesis narrative (revised):** "Orthogonal pump-probe TDDFT reveals that disorder modifies ultrafast dynamics through scattering, captured by a generalized Drude model for transport and accelerated dephasing for coherence. Both phenomena show systematic disorder dependence, with spectral signatures (red shift, peak restructuring) linked to DOS changes."
+**Thesis narrative (revised):** "Orthogonal pump-probe TDDFT reveals that disorder modifies ultrafast dynamics through scattering, captured by a generalized Drude model for transport and accelerated dephasing for coherence. Both phenomena show systematic disorder dependence. Whether transport and coherence dynamics are quantitatively linked is under investigation; if confirmed, this provides a unified description of disorder effects across intraband and interband channels."

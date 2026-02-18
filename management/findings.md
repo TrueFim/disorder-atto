@@ -18,3 +18,5 @@
 - Disorder does not produce significant qualitative differences in the time-domain dynamics of photoinjection (based on initial investigations of the nonlinear work), suggesting that the primary signature of disorder lies in transport and dephasing rather than the injection process itself.
 - Disorder minimally affects the early-time excitation dynamics: $J_x(t)$ for a perfect crystal and a disordered solid stay in phase for several femtoseconds when the pump pulse is moderately strong ($3.5 \times 10^9$ W/cm²).
 - The spectral phase of FID in disordered media is flatter than in perfect crystals, possibly indicating more synchronized oscillator phases due to homogeneous population.
+- The probe pulse significantly accelerates dephasing of $J_z(t)$ (dipole oscillations along the pump field) relative to the pump-only case — observed for at least one disordered crystal configuration. Whether this also occurs in perfect crystals is not yet established.
+- Mandel's $\tau_\mathrm{coh}$ (extracted from $J_x(t)$ in pump-probe simulations) does **not** appear to correlate with the momentum relaxation rate $\gamma$. Preliminary result; methodologically uncertain.
