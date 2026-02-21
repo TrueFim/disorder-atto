@@ -102,7 +102,8 @@ volume = 160.1 # для Si в A^3
 
 plt.rcParams['font.family'] = 'serif'
 import matplotlib
-# matplotlib.use('Agg')
+# matplotlib.use('Agg') for server (not necessary)
+# matplotlib.use("TkAgg")
 # print(matplotlib.get_backend())
 
 
@@ -114,7 +115,7 @@ import matplotlib
 
 # ## all plots func
 
-# In[2]:
+# In[10]:
 
 
 def plot_nonlinear_response_v4(folder, ax, j):
@@ -434,6 +435,9 @@ def plot_nonlinear_response_v4(folder, ax, j):
     a_start = arr[m0_cut_2-m0_cut_3]
     a_fin = arr[-1]
 
+    plt.show()
+    plt.close()
+
     return tau
 
 
@@ -454,7 +458,7 @@ def plot_nonlinear_response_v4(folder, ax, j):
 
 
 
-# In[3]:
+# In[11]:
 
 
 def drude_current_v1(dummy_t, j0, j_final, tau):
@@ -503,7 +507,7 @@ def drude_current_v1(dummy_t, j0, j_final, tau):
 
 
 
-# In[4]:
+# In[12]:
 
 
 def drude_exp_fit_v2_pump(dummy_t, j0, j_final, tau):
@@ -567,7 +571,7 @@ def drude_exp_fit_v2_pump(dummy_t, j0, j_final, tau):
 
 
 
-# In[5]:
+# In[13]:
 
 
 def extract_c_num(s):
@@ -612,7 +616,7 @@ def extract_p(s):
 
 
 
-# In[6]:
+# In[14]:
 
 
 def get_n_excited_electrons(folder):
@@ -669,7 +673,7 @@ def get_n_excited_electrons(folder):
 
 
 
-# In[7]:
+# In[15]:
 
 
 def get_pulse_durations(folder):
@@ -706,7 +710,7 @@ def get_pulse_durations(folder):
 
 
 
-# In[8]:
+# In[16]:
 
 
 ax = 'z'
@@ -739,7 +743,7 @@ print(" ")
 
 # ## all plots
 
-# In[10]:
+# In[17]:
 
 
 taus_exp_x = []
@@ -775,7 +779,7 @@ print(" ")
 
 
 
-# In[11]:
+# In[19]:
 
 
 j=0
@@ -992,6 +996,9 @@ for folder in sorted_folders:
     plt.savefig("all_data/current_energy/ims/energy_current/png/" + str(j)+ '_energy_current_' + folder + ".png", dpi=200)
     plt.savefig("all_data/current_energy/ims/energy_current/pdf/" + str(j)+ '_energy_current_' + folder + ".pdf", bbox_inches="tight")
 
+    plt.show()
+    plt.close()
+
     print("For " + folder + " energy&current plots are completed")
 
 print(" ")
@@ -1017,7 +1024,7 @@ print(" ")
 
 
 
-# In[12]:
+# In[20]:
 
 
 j=0
@@ -1183,7 +1190,7 @@ print(" ")
 
 
 
-# In[13]:
+# In[21]:
 
 
 j=0
@@ -1301,6 +1308,9 @@ for folder in sorted_folders:
     plt.savefig("all_data/hhg/ims/png/" + str(j)+ '_hhg_' + folder + ".png", dpi=200)
     plt.savefig("all_data/hhg/ims/pdf/" + str(j)+ '_hhg_' + folder + ".pdf", bbox_inches="tight")
 
+    plt.show()
+    plt.close()
+
     print("For " + folder + " hhg plots are completed")
 
 print(" ")
@@ -1326,7 +1336,7 @@ print(" ")
 
 
 
-# In[14]:
+# In[22]:
 
 
 j=0
@@ -1433,7 +1443,7 @@ print(" ")
 
 
 
-# In[15]:
+# In[23]:
 
 
 def effecive_mass_model(alpha, a, b, c):
@@ -1446,7 +1456,7 @@ def effecive_mass_model(alpha, a, b, c):
 
 
 
-# In[16]:
+# In[24]:
 
 
 delta_start_drude_fit = 300
@@ -1524,7 +1534,7 @@ def generalized_drude_current_v8_tau_j_final_free_mass_adjustment(dummy_t, j0, a
 
 
 
-# In[17]:
+# In[25]:
 
 
 new_taus = []
@@ -1698,6 +1708,9 @@ for folder in sorted_folders:
 
     print("For " + folder + " drude fit current data saving in csv format is completed")
 
+    plt.show()
+    plt.close()
+
 
 
 
@@ -1710,7 +1723,7 @@ print(" ")
 
 
 
-# In[18]:
+# In[26]:
 
 
 def blue_red_gradient(n):
@@ -1738,7 +1751,7 @@ def blue_red_gradient(n):
 
 
 
-# In[19]:
+# In[27]:
 
 
 # colors = blue_red_gradient(len(sorted_folders))
@@ -1780,6 +1793,9 @@ if len(sorted_folders)<12:
     print("Effective mass plots are completed")
     print(" ")
 
+    plt.show()
+    plt.close()
+
 
 
     # plt.savefig("drude_mass_adj/" + "Mass_Dependence_on_disorder" + ".png", dpi=200, bbox_inches='tight')
@@ -1797,7 +1813,7 @@ if len(sorted_folders)<12:
 
 
 
-# In[20]:
+# In[28]:
 
 
 num_folder=0
@@ -1853,7 +1869,7 @@ print(" ")
 
 
 
-# In[21]:
+# In[29]:
 
 
 def coherence_time(Y, dt) -> float:
@@ -1888,7 +1904,7 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[22]:
+# In[30]:
 
 
 # coherence_time(fid_signal, 0.002)
@@ -1906,7 +1922,7 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[23]:
+# In[31]:
 
 
 def get_autocorr_envelope(Y, dt):
@@ -1928,7 +1944,7 @@ def get_autocorr_envelope(Y, dt):
 
 
 
-# In[24]:
+# In[32]:
 
 
 def coherence_time_v2_abs(Y, dt) -> float:
@@ -1947,7 +1963,7 @@ def coherence_time_v2_abs(Y, dt) -> float:
 
 
 
-# In[25]:
+# In[33]:
 
 
 def find_halfcycle_maxima(t, y):
@@ -1983,7 +1999,7 @@ def find_halfcycle_maxima(t, y):
 
 
 
-# In[26]:
+# In[34]:
 
 
 def exp_gauss(t, A, tau, t0, sigma, C):
@@ -2013,7 +2029,7 @@ def fit_exp_gauss(t, y):
 
 
 
-# In[27]:
+# In[35]:
 
 
 def gaussian_convolve(y, sigma):
@@ -2044,7 +2060,7 @@ def gaussian_convolve(y, sigma):
 
 
 
-# In[28]:
+# In[36]:
 
 
 def fourier_plot(fid_signal, convolve_val):
@@ -2100,7 +2116,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[30]:
+# In[37]:
 
 
 tau_fid_z_arr = []
@@ -2537,10 +2553,7 @@ for folder in sorted_folders:
 
 
     plt.show()
-
-
-
-
+    plt.close()
 
 
 print(" ")
@@ -2564,7 +2577,7 @@ print(" ")
 
 
 
-# In[31]:
+# In[38]:
 
 
 # spectral_intensity_data=np.array([F_ens, F_fid, F_fid_normalized])
@@ -2597,7 +2610,7 @@ print(" ")
 
 
 
-# In[32]:
+# In[39]:
 
 
 # print(np.array(eV_autocorrelation_fid)-np.array(eV_autocorrelation_fid_coherence_v2))
@@ -2625,7 +2638,7 @@ print(" ")
 
 
 
-# In[33]:
+# In[41]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2697,8 +2710,11 @@ plt.tight_layout()
 plt.savefig("all_data/fid/" + 'tau_comparison.png', dpi=200)
 plt.savefig("all_data/fid/" + 'tau_comparison.pdf', bbox_inches="tight")
 
+plt.show()
+plt.close()
 
-# In[34]:
+
+# In[42]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2741,6 +2757,9 @@ plt.tight_layout()
 plt.savefig("all_data/fid/" + 'tau_comparison_v2.png', dpi=200)
 plt.savefig("all_data/fid/" + 'tau_comparison_v2.pdf', bbox_inches="tight")
 
+plt.show()
+plt.close()
+
 
 # In[ ]:
 
@@ -2748,7 +2767,7 @@ plt.savefig("all_data/fid/" + 'tau_comparison_v2.pdf', bbox_inches="tight")
 
 
 
-# In[35]:
+# In[43]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2796,6 +2815,10 @@ plt.savefig("all_data/fid/" + 'decay_rate_equality_check.pdf', bbox_inches="tigh
 
 
 plt.legend(fontsize=10)
+
+
+plt.show()
+plt.close()
 
 
 # In[ ]:
