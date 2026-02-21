@@ -3,11 +3,15 @@
 
 # ## Import
 
-# In[1]:
+# In[48]:
 
 
 import numpy as np
 import scipy
+from scipy import signal
+from scipy.signal import hilbert
+from scipy import integrate
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -710,7 +714,7 @@ def get_pulse_durations(folder):
 
 
 
-# In[16]:
+# In[44]:
 
 
 ax = 'z'
@@ -720,8 +724,8 @@ folders = [name for name in os.listdir('.') if os.path.isdir(os.path.join('.', n
 # folders = [f for f in folders if f.startswith('c')]
 folders = [f for f in folders 
            if f.startswith('c') 
-           and os.path.isfile(os.path.join(f, 'probe_pulse_rt.data')) 
-           and not os.path.isdir(os.path.join(f, 'restart'))]
+           and os.path.isfile(os.path.join(f, 'probe_pulse_rt.data'))]
+           # and not os.path.isdir(os.path.join(f, 'restart'))]
 
 
 # print(folders)
@@ -1869,7 +1873,7 @@ print(" ")
 
 
 
-# In[29]:
+# In[58]:
 
 
 def coherence_time(Y, dt) -> float:
@@ -1891,11 +1895,23 @@ def coherence_time(Y, dt) -> float:
     ACF = scipy.signal.correlate(Y, Y, mode="full", method="direct") # autocorrelation function
     N = len(Y)
     # X = dt * np.arange(-(N - 1), N) # DEBUGGING
-    ACF_envelope = np.abs(scipy.signal.envelope(ACF, residual=None))
+    ACF_envelope = np.abs(hilbert(ACF))
+    # ACF_envelope = np.abs(scipy.signal.envelope(ACF, residual=None))
     ACF_envelope /= np.max(ACF_envelope)
     i1 = N - 1 # np.flatnonzero(X >= 0)[0]
     # print("X[i1] =", X[i1]) # DEBUGGING
     return 2.0 * scipy.integrate.simpson(ACF_envelope[i1:]**2, dx=dt)
+
+
+# In[59]:
+
+
+# ACF = scipy.signal.correlate(fid_signal, fid_signal, mode="full", method="direct") # autocorrelation function
+# ACF_envelope_v2 = np.abs(hilbert(ACF))
+# ACF_envelope_v2 = ACF_envelope_v2/max(ACF_envelope_v2)
+
+# plt.plot(ACF/max(ACF))
+# plt.plot(ACF_envelope_v2)
 
 
 # In[ ]:
@@ -1904,7 +1920,13 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[30]:
+# In[ ]:
+
+
+
+
+
+# In[60]:
 
 
 # coherence_time(fid_signal, 0.002)
@@ -1922,7 +1944,7 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[31]:
+# In[61]:
 
 
 def get_autocorr_envelope(Y, dt):
@@ -1930,7 +1952,8 @@ def get_autocorr_envelope(Y, dt):
     ACF = scipy.signal.correlate(Y, Y, mode="full", method="direct") # autocorrelation function
     N = len(Y)
     # X = dt * np.arange(-(N - 1), N) # DEBUGGING
-    ACF_envelope = np.abs(scipy.signal.envelope(ACF, residual=None))
+    ACF_envelope = np.abs(hilbert(ACF))
+    # ACF_envelope = np.abs(scipy.signal.envelope(ACF, residual=None))
     ACF_envelope /= np.max(ACF_envelope)
     i1 = N - 1 # np.flatnonzero(X >= 0)[0]
     # print("X[i1] =", X[i1]) # DEBUGGING
@@ -1944,7 +1967,7 @@ def get_autocorr_envelope(Y, dt):
 
 
 
-# In[32]:
+# In[62]:
 
 
 def coherence_time_v2_abs(Y, dt) -> float:
@@ -1963,7 +1986,7 @@ def coherence_time_v2_abs(Y, dt) -> float:
 
 
 
-# In[33]:
+# In[63]:
 
 
 def find_halfcycle_maxima(t, y):
@@ -1999,7 +2022,7 @@ def find_halfcycle_maxima(t, y):
 
 
 
-# In[34]:
+# In[64]:
 
 
 def exp_gauss(t, A, tau, t0, sigma, C):
@@ -2029,7 +2052,7 @@ def fit_exp_gauss(t, y):
 
 
 
-# In[35]:
+# In[65]:
 
 
 def gaussian_convolve(y, sigma):
@@ -2060,7 +2083,7 @@ def gaussian_convolve(y, sigma):
 
 
 
-# In[36]:
+# In[66]:
 
 
 def fourier_plot(fid_signal, convolve_val):
@@ -2102,7 +2125,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[29]:
+# In[67]:
 
 
 # # plt.plot(t[m0_cut_4:], (Jm_pump_z[m0_cut_4:]-j_fit_full)/(y_fit+max(fid_peak_vals[-4:])-C), color='m')
@@ -2116,7 +2139,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[37]:
+# In[68]:
 
 
 tau_fid_z_arr = []
@@ -2565,19 +2588,7 @@ print(" ")
 
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[38]:
+# In[69]:
 
 
 # spectral_intensity_data=np.array([F_ens, F_fid, F_fid_normalized])
@@ -2610,7 +2621,7 @@ print(" ")
 
 
 
-# In[39]:
+# In[70]:
 
 
 # print(np.array(eV_autocorrelation_fid)-np.array(eV_autocorrelation_fid_coherence_v2))
