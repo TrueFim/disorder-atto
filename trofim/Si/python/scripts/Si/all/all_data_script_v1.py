@@ -11,6 +11,7 @@ import scipy
 from scipy import signal
 from scipy.signal import hilbert
 from scipy import integrate
+from scipy.integrate import simps
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -1900,7 +1901,7 @@ def coherence_time(Y, dt) -> float:
     ACF_envelope /= np.max(ACF_envelope)
     i1 = N - 1 # np.flatnonzero(X >= 0)[0]
     # print("X[i1] =", X[i1]) # DEBUGGING
-    return 2.0 * scipy.integrate.simpson(ACF_envelope[i1:]**2, dx=dt)
+    return 2.0 * scipy.integrate.simps(ACF_envelope[i1:]**2, dx=dt)
 
 
 # In[59]:
@@ -1977,7 +1978,7 @@ def coherence_time_v2_abs(Y, dt) -> float:
     N = len(Y)
     i1 = N - 1 # np.flatnonzero(X >= 0)[0]
 
-    return 2.0 * scipy.integrate.simpson(ACF[i1:]**2, dx=dt)
+    return 2.0 * scipy.integrate.simps(ACF[i1:]**2, dx=dt)
 
 
 # In[ ]:
