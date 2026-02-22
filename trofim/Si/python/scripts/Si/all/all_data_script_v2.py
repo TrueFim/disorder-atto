@@ -2735,8 +2735,8 @@ plt.plot(folder_nums, new_taus, color='b', label=r'$\tau_{drude}^x$')
 plt.scatter(folder_nums, new_taus, color='black')
 
 
-plt.plot(folder_nums, tau_fid_z_arr, color='r', label=r'$\tau_{fid}^z$')
-plt.scatter(folder_nums, tau_fid_z_arr, color='black')
+# plt.plot(folder_nums, tau_fid_z_arr, color='r', label=r'$\tau_{fid}^z$')
+# plt.scatter(folder_nums, tau_fid_z_arr, color='black')
 
 
 
@@ -2879,10 +2879,10 @@ plt.scatter(folder_nums, 1/np.array(new_taus) + 1/np.array(normalized_fid_mandel
 plt.plot(folder_nums, 1/np.array(new_taus) + 1/np.array(normalized_fid_mandels_coherence_abs_v2), color='r', linestyle='--')
 
 
-plt.plot(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence), color='orange', label=r'$1/\tau_{norm.fid \, coherence}^z + 1/\tau_{fid}^z$')
-plt.scatter(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence), color='black')
+# plt.plot(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence), color='orange', label=r'$1/\tau_{norm.fid \, coherence}^z + 1/\tau_{fid}^z$')
+# plt.scatter(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence), color='black')
 
-plt.plot(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence_abs_v2), color='orange', linestyle='--')
+# plt.plot(folder_nums, 1/np.array(tau_fid_z_arr) + 1/np.array(normalized_fid_mandels_coherence_abs_v2), color='orange', linestyle='--')
 
 
 plt.legend(fontsize=11)
