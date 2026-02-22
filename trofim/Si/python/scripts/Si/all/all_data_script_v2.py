@@ -3,7 +3,7 @@
 
 # ## Import
 
-# In[1]:
+# In[102]:
 
 
 import numpy as np
@@ -124,7 +124,7 @@ import matplotlib
 
 # ## all plots func
 
-# In[2]:
+# In[103]:
 
 
 def plot_nonlinear_response_v4(folder, ax, j):
@@ -244,9 +244,20 @@ def plot_nonlinear_response_v4(folder, ax, j):
 
     t_array_cut = np.array(t[m0_cut_4:])[::50]
     j_exp = np.array(Jm_pump_z[m0_cut_4:])[::50]
-    # (dummy_t, j0, j_final, tau)
-    p0 = [0.02, 0, 6.65]   # начальные приближения (n, tau)
-    popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0)
+    # (dummy_t, j0, j_final, tau 6.65)
+
+
+    p0 = [0.02, 0, 20]
+
+    try:
+        popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0)
+    except RuntimeError:
+        print("First fit failed, trying different initial guess...")
+
+        p0_v2 = [0.05, 0, 6.65]
+        popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0_v2)
+
+
     j0, j_final, tau_pump= popt
     j_fit = drude_exp_fit_v2_pump(0, j0, j_final, tau_pump)
 
@@ -467,7 +478,7 @@ def plot_nonlinear_response_v4(folder, ax, j):
 
 
 
-# In[3]:
+# In[104]:
 
 
 def drude_current_v1(dummy_t, j0, j_final, tau):
@@ -516,7 +527,7 @@ def drude_current_v1(dummy_t, j0, j_final, tau):
 
 
 
-# In[4]:
+# In[105]:
 
 
 def drude_exp_fit_v2_pump(dummy_t, j0, j_final, tau):
@@ -580,7 +591,7 @@ def drude_exp_fit_v2_pump(dummy_t, j0, j_final, tau):
 
 
 
-# In[5]:
+# In[106]:
 
 
 def extract_c_num(s):
@@ -631,7 +642,7 @@ def extract_amorphous_value(name):
 
 
 
-# In[6]:
+# In[107]:
 
 
 def get_n_excited_electrons(folder):
@@ -688,7 +699,7 @@ def get_n_excited_electrons(folder):
 
 
 
-# In[7]:
+# In[108]:
 
 
 def get_pulse_durations(folder):
@@ -725,7 +736,7 @@ def get_pulse_durations(folder):
 
 
 
-# In[8]:
+# In[109]:
 
 
 ax = 'z'
@@ -768,7 +779,7 @@ print(" ")
 
 # ## all plots
 
-# In[9]:
+# In[70]:
 
 
 taus_exp_x = []
@@ -1471,7 +1482,7 @@ print(" ")
 
 
 
-# In[14]:
+# In[79]:
 
 
 def effecive_mass_model(alpha, a, b, c):
@@ -1484,7 +1495,7 @@ def effecive_mass_model(alpha, a, b, c):
 
 
 
-# In[15]:
+# In[80]:
 
 
 delta_start_drude_fit = 500
@@ -1562,7 +1573,7 @@ def generalized_drude_current_v8_tau_j_final_free_mass_adjustment(dummy_t, j0, a
 
 
 
-# In[16]:
+# In[81]:
 
 
 new_taus = []
@@ -1750,7 +1761,7 @@ print(" ")
 
 
 
-# In[18]:
+# In[82]:
 
 
 def blue_red_gradient(n):
@@ -1778,7 +1789,7 @@ def blue_red_gradient(n):
 
 
 
-# In[20]:
+# In[83]:
 
 
 # colors = blue_red_gradient(len(sorted_folders))
@@ -1839,7 +1850,7 @@ if len(sorted_folders)<12:
 
 
 
-# In[21]:
+# In[84]:
 
 
 num_folder=0
@@ -1897,7 +1908,7 @@ print(" ")
 
 
 
-# In[22]:
+# In[85]:
 
 
 def coherence_time(Y, dt) -> float:
@@ -1931,7 +1942,7 @@ def coherence_time(Y, dt) -> float:
         return 2.0 * scipy.integrate.simpson(ACF_envelope[i1:]**2, dx=dt)
 
 
-# In[23]:
+# In[86]:
 
 
 # ACF = scipy.signal.correlate(fid_signal, fid_signal, mode="full", method="direct") # autocorrelation function
@@ -1954,7 +1965,7 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[24]:
+# In[87]:
 
 
 # coherence_time(fid_signal, 0.002)
@@ -1972,7 +1983,7 @@ def coherence_time(Y, dt) -> float:
 
 
 
-# In[55]:
+# In[88]:
 
 
 def get_autocorr_envelope(Y, dt):
@@ -1995,7 +2006,7 @@ def get_autocorr_envelope(Y, dt):
 
 
 
-# In[56]:
+# In[89]:
 
 
 def coherence_time_v2_abs(Y, dt) -> float:
@@ -2018,7 +2029,7 @@ def coherence_time_v2_abs(Y, dt) -> float:
 
 
 
-# In[57]:
+# In[90]:
 
 
 def find_halfcycle_maxima(t, y):
@@ -2072,7 +2083,7 @@ def find_halfcycle_maxima(t, y):
 
 
 
-# In[64]:
+# In[91]:
 
 
 def exp_gauss(t, A, tau, t0, sigma, C):
@@ -2102,7 +2113,7 @@ def fit_exp_gauss(t, y):
 
 
 
-# In[65]:
+# In[92]:
 
 
 def gaussian_convolve(y, sigma):
@@ -2133,7 +2144,7 @@ def gaussian_convolve(y, sigma):
 
 
 
-# In[66]:
+# In[93]:
 
 
 def fourier_plot(fid_signal, convolve_val):
@@ -2175,7 +2186,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[67]:
+# In[94]:
 
 
 # plt.scatter(t_peaks_vals, fid_peak_vals, color='r')
@@ -2194,7 +2205,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[68]:
+# In[95]:
 
 
 # # plt.plot(t[m0_cut_4:], (Jm_pump_z[m0_cut_4:]-j_fit_full)/(y_fit+max(fid_peak_vals[-4:])-C), color='m')
@@ -2208,7 +2219,7 @@ def fourier_plot(fid_signal, convolve_val):
 
 
 
-# In[83]:
+# In[96]:
 
 
 tau_fid_z_arr = []
@@ -2307,8 +2318,19 @@ for folder in sorted_folders:
     t_array_cut = np.array(t[m0_cut_4:])[::50]
     j_exp = np.array(Jm_pump_z[m0_cut_4:])[::50]
     # (dummy_t, j0, j_final, tau)
-    p0 = [0.02, 0, 6.65]   # начальные приближения (n, tau)
-    popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0)
+
+
+    p0 = [0.02, 0, 20]
+
+    try:
+        popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0)
+    except RuntimeError:
+        print("First fit failed, trying different initial guess...")
+
+        p0_v2 = [0.05, 0, 6.65]
+        popt, pcov = curve_fit(drude_exp_fit_v2_pump, t_array_cut, j_exp, p0=p0_v2)
+
+
     j0, j_final, tau_pump= popt
     j_fit = drude_exp_fit_v2_pump(0, j0, j_final, tau_pump)
 
@@ -2656,7 +2678,7 @@ print(" ")
 
 
 
-# In[84]:
+# In[97]:
 
 
 # spectral_intensity_data=np.array([F_ens, F_fid, F_fid_normalized])
@@ -2689,7 +2711,7 @@ print(" ")
 
 
 
-# In[85]:
+# In[98]:
 
 
 # print(np.array(eV_autocorrelation_fid)-np.array(eV_autocorrelation_fid_coherence_v2))
@@ -2717,7 +2739,7 @@ print(" ")
 
 
 
-# In[86]:
+# In[99]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2793,7 +2815,7 @@ plt.show()
 plt.close()
 
 
-# In[87]:
+# In[100]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2846,7 +2868,7 @@ plt.close()
 
 
 
-# In[88]:
+# In[101]:
 
 
 plt.figure(figsize=(8, 5))
