@@ -1517,7 +1517,7 @@ def moving_average_time(signal, dt, window_width, mode='reflect'):
 
 error_min = 100
 
-for m0_cut_4_shift in [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300]:
+for m0_cut_4_shift in [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400]:
 
     tau_fid_z_arr = []
 
@@ -2323,7 +2323,7 @@ print(" ")
 
 
 
-# In[33]:
+# In[40]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2391,6 +2391,7 @@ plt.xticks(folder_nums)
 plt.legend(fontsize=12)
 plt.grid()
 plt.tight_layout()
+plt.ylim(0, 8)
 
 plt.savefig("all_data/fid/" + 'tau_comparison.png', dpi=200)
 plt.savefig("all_data/fid/" + 'tau_comparison.pdf', bbox_inches="tight")
@@ -2405,7 +2406,7 @@ plt.close()
 
 
 
-# In[35]:
+# In[41]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2447,6 +2448,7 @@ plt.xticks(folder_nums)
 plt.legend(fontsize=12)
 plt.grid()
 plt.tight_layout()
+plt.ylim(0, 8)
 
 plt.savefig("all_data/fid/" + 'tau_comparison_v2.png', dpi=200)
 plt.savefig("all_data/fid/" + 'tau_comparison_v2.pdf', bbox_inches="tight")
@@ -2507,7 +2509,7 @@ df.to_csv("all_data/fid/z/data/taus_drude_coherence_autocorrelation.csv", encodi
 
 
 
-# In[37]:
+# In[43]:
 
 
 plt.figure(figsize=(8, 5))
@@ -2549,6 +2551,7 @@ plt.scatter(folder_nums, 1/np.array(new_taus) + 1/np.array(normalized_fid_mandel
 plt.legend(fontsize=11)
 plt.grid()
 plt.tight_layout()
+plt.ylim(0, 1.5)
 
 plt.savefig("all_data/fid/" + 'decay_rate_equality_check.png', dpi=200)
 plt.savefig("all_data/fid/" + 'decay_rate_equality_check.pdf', bbox_inches="tight")
