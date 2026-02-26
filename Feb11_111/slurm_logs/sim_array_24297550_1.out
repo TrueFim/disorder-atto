@@ -1,0 +1,40 @@
+Looking for simulation folders in: /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111, excluding 'slurm_logs'
+Found 3 simulation folders (excluding 'slurm_logs') in /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111.
+There are 3 simulation folders.
+Output/Error logs will be in the 'slurm_logs' directory.
+--- Task Start ---
+SLURM Array Job ID: 24297550
+SLURM Array Task ID: 1
+Parent Simulation Directory: /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111
+Processing folder: /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111/c111_s0.000_r18_k18_a1_i800_t9_p3d10_5d11
+Current directory: /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111/c111_s0.000_r18_k18_a1_i800_t9_p3d10_5d11
+SLURM_JOB_NUM_NODES = 16
+OMP_NUM_THREADS = 72
+                                  
+================================= 
+Global information about the job: 
+================================= 
+  
+Job owner: truzaikin(75115)
+Job name:  salmon
+Node list: ravc[3017,3041,3128,3138,3148,3150,3152-3153,3155,3166,3173,3181-3182,3412,3419,3423]
+Job start: Thu Feb 12 07:21:53 CET 2026
+Job end:   Thu Feb 12 07:23:25 CET 2026
+Work dir:  /ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111/./
+Command:   /raven/ptmp/truzaikin/Si/orthogonal/Feb/Feb11/Feb11_111/SUBMIT_RAVEN.sh
+  
+  
+  
+==========================================================================================
+Information on jobsteps (Note: MaxRSS/AveRSS is the maximum/average over all 
+tasks of the per-task memory high-water marks; cf. "man sacct"): 
+==========================================================================================
+  
+JobID            JobName NNodes NTasks  NCPUS       MaxRSS       AveRSS    Elapsed ExitCode
+------------- ---------- ------ ------ ------ ------------ ------------ ---------- --------
+24297550_1        salmon     16          2304                             00:01:32      0:0
+24297550_1.0      salmon     16     16   2304    11545.45M    11522.77M   00:01:25      1:0
+  
+Maximum memory per node: 12.106277 GB (defined as MaxRSS*Ntasks/NNodes)
+CPU utilization: 80.8 %
+  
