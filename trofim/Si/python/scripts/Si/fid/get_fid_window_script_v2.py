@@ -1559,7 +1559,7 @@ for m0_cut_4_shift in [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 30
 
 
     if 'amorphous' in folder:
-        delta_1_tau_arr = 1/np.array(new_taus)[:5] + 1/np.array(normalized_fid_mandels_coherence)[:5] - 1/np.array(mandels_coherence_arr)[:5]
+        delta_1_tau_arr = 1/np.array(new_taus)[:4] + 1/np.array(normalized_fid_mandels_coherence)[:4] - 1/np.array(mandels_coherence_arr)[:4]
     else:
         delta_1_tau_arr = 1/np.array(new_taus)[1:5] + 1/np.array(normalized_fid_mandels_coherence)[1:5] - 1/np.array(mandels_coherence_arr)[1:5]
 
