@@ -1,0 +1,75 @@
+\chapter{Real-Time Time-Dependent Density Functional Theory}
+\label{chap:tddft}
+
+\section{Theory and Principles of RT-TDDFT}
+
+Real-time time-dependent density functional theory (RT-TDDFT) provides an \textit{ab initio} framework for simulating the response of interacting electrons to time-dependent electromagnetic fields. In contrast to frequency-domain (Casida-type) TDDFT, where excitation energies are obtained from an eigenvalue problem formulated in the frequency domain, RT-TDDFT directly propagates the Kohn--Sham (KS) orbitals in real physical time. This formulation makes it particularly well suited for describing ultrafast and nonlinear phenomena, including strong-field dynamics and attosecond pump--probe processes in solids \cite{RungeGross1984,Yabana2012,Sato2025review}.
+
+\subsection{Time-Dependent Kohn--Sham Equations}
+
+The theoretical foundation of RT-TDDFT is the Runge--Gross theorem \cite{RungeGross1984}, which establishes a one-to-one correspondence between the time-dependent electron density $n(\mathbf r,t)$ and the external potential, up to a purely time-dependent gauge function, for a fixed initial many-body state. This allows the interacting system to be mapped onto an auxiliary non-interacting KS system whose orbitals satisfy
+
+\begin{equation}
+  i\frac{\partial}{\partial t}\psi_{n\mathbf{k}}(\mathbf r,t)
+  = \hat{H}_{\mathrm{KS}}[n](t)\,\psi_{n\mathbf{k}}(\mathbf r,t),
+  \label{eq:TDKS}
+\end{equation}
+
+with the Hamiltonian
+
+\begin{equation}
+  \hat{H}_{\mathrm{KS}}(t)
+  = \frac{1}{2}\left[-i\nabla + \mathbf A(t)\right]^2
+    + v_{\mathrm{ion}}(\mathbf r)
+    + v_{\mathrm{H}}[n](\mathbf r,t)
+    + v_{\mathrm{xc}}[n](\mathbf r,t).
+\end{equation}
+
+Here $v_{\mathrm{ion}}$ denotes the ionic potential, typically represented by norm-conserving pseudopotentials, $v_{\mathrm{H}}$ is the Hartree potential, and $v_{\mathrm{xc}}$ is the exchange--correlation (XC) potential. The external laser field is introduced via the time-dependent vector potential $\mathbf A(t)$ in the velocity gauge, which is equivalent to a scalar potential formulation in the length gauge \cite{Yabana2012,PhysRevB.89.064304}.
+
+The time-dependent electron density is reconstructed from the occupied KS orbitals as
+
+\begin{equation}
+  n(\mathbf r,t)
+  = \sum_{n\mathbf{k}} f_{n\mathbf{k}}
+    \left|\psi_{n\mathbf{k}}(\mathbf r,t)\right|^2,
+  \label{eq:KS_density}
+\end{equation}
+
+where $f_{n\mathbf{k}}$ are the occupation numbers of the initial ground state. In practical implementations, Eqs.~\eqref{eq:TDKS}--\eqref{eq:KS_density} are discretized either on a real-space grid or in a plane-wave basis and propagated using unitary time-evolution schemes such as enforced time-reversal symmetry (ETRS) or midpoint propagators \cite{Yabana2012,PhysRevB.89.064304}.
+
+\subsection{Exchange--Correlation Potentials}
+
+A central approximation in practical RT-TDDFT is the choice of the time-dependent XC potential. In most applications, including the present work, the adiabatic approximation is employed, in which the ground-state XC functional is evaluated at the instantaneous density. This neglects memory effects but has proven reliable for early-time coherent dynamics in solids \cite{Botti2007,Sato2025review}.
+
+Within ground-state DFT, several families of functionals are commonly used. The local density approximation (LDA) expresses the XC energy as a local function of the density and is typically parameterized using homogeneous electron gas data, such as in the Perdew--Zunger (PZ) form. Generalized gradient approximations (GGA) extend this by incorporating density gradients and often improve structural properties. More advanced meta-GGA-type functionals, including the Tran--Blaha modified Becke--Johnson (TB-mBJ) potential, incorporate kinetic-energy density or orbital-dependent information and can significantly improve band-gap predictions in semiconductors.
+
+For extended systems, the choice of functional directly influences the band structure, transition energies, and effective masses, and therefore impacts the simulated ultrafast response.
+
+\subsection{Exchange--Correlation Potentials in SALMON}
+
+All RT-TDDFT simulations in this thesis are performed using the SALMON (Scalable \textit{Ab initio} Light--Matter Simulator for Optics and Nanoscience) code \cite{Noda_2019}. SALMON is a real-space, real-time TDDFT package designed for molecules, nanostructures, and periodic solids, and is efficiently parallelized for large-scale simulations.
+
+In SALMON, the XC functional is specified through the \texttt{\&functional} input namelist \cite{SALMONmanual}. For periodic systems such as crystalline silicon, the most relevant adiabatic choices include the Perdew--Zunger LDA (PZ-LDA), which is computationally efficient and used throughout this work; a modified PZ form (PZM-LDA); and the TB-mBJ meta-GGA potential combined with Perdew--Wang correlation, which is known to yield improved band gaps in semiconductors.
+
+%============================================================
+
+\section{Ultrafast Electron Dynamics in Silicon and the Validity Window of RT-TDDFT}
+
+To assess what aspects of silicon’s ultrafast response can be reliably described within RT-TDDFT, it is instructive to consider the hierarchy of microscopic processes triggered by a few-femtosecond excitation pulse and to analyze how these processes are represented within the time-dependent KS framework.
+
+Immediately during the pump pulse, coherent interband excitation generates polarization and redistributes population between valence and conduction bands. Attosecond transient absorption experiments in crystalline silicon resolve step-like changes in absorption synchronized with the electric-field half-cycles, with rise times on the order of several hundred attoseconds \cite{Schultze2014Si}. RT-TDDFT accurately captures this early-time coherent regime, including sub-femtosecond population transfer and the onset of carrier-induced band-gap renormalization \cite{Schultze2014Si,Yabana2012,Sato2025review}.
+
+On time scales of approximately 1–5\,fs, injected carriers screen the Coulomb interaction and modify the KS potential, producing transient band-gap shifts and spectral broadening. Within RT-TDDFT, this effect arises from the time-dependent Hartree and XC potentials and reproduces the temporal evolution observed experimentally, although correlation effects beyond the adiabatic approximation may affect quantitative accuracy \cite{Schultze2014Si,Botti2007}.
+
+During the pulse, intraband acceleration and strong-field effects also occur. These include dynamical Stark and Franz--Keldysh shifts as well as high-harmonic generation in sufficiently strong fields. Such phenomena are naturally described in RT-TDDFT and have been extensively modeled within this framework \cite{Yabana2012,Uemoto2019,Sato2025review}.
+
+In disordered silicon, structural fluctuations introduce distributions of local transition energies and effective band gaps. Even in the absence of explicit scattering, this static inhomogeneity leads to dephasing of the macroscopic polarization on time scales of several femtoseconds. Because RT-TDDFT explicitly incorporates the real-space structure of the supercell, such inhomogeneous broadening is inherently included in simulations of disordered systems.
+
+Beyond these coherent processes, electron–electron scattering and carrier thermalization gradually redistribute energy and momentum among carriers. While instantaneous Coulomb interactions are fully included through the Hartree and XC potentials, true collisional processes associated with imaginary parts of many-body self-energies are not explicitly treated in adiabatic RT-TDDFT. Many-body approaches such as nonequilibrium Green’s functions indicate that electron–electron thermalization in silicon occurs on multi-femtosecond time scales extending to several tens of femtoseconds \cite{Marini2013,Sangalli2015,Sjakste2025UltrafastDO,Bernardi2014}. RT-TDDFT therefore provides an accurate description of the coherent and quasi-collisionless regime, but does not capture irreversible thermalization.
+
+On longer time scales, electron–phonon coupling drives momentum relaxation and carrier cooling, typically within tens to hundreds of femtoseconds \cite{Bernardi2014, Cushing_2018,Worle2021,PhysRevB.100.035201}. Such processes require explicit lattice dynamics and are beyond the scope of the present simulations.
+
+Taken together, these considerations define a natural validity window for adiabatic RT-TDDFT in silicon. The method is quantitatively reliable for the early-time coherent regime up to approximately 20–30\,fs, encompassing interband excitation, mean-field screening, strong-field intraband dynamics, and disorder-induced inhomogeneous dephasing. At longer delays, RT-TDDFT continues to provide qualitatively meaningful insight into the coherent component of the response, but a fully quantitative treatment of irreversible relaxation requires approaches beyond mean-field TDDFT.
+
+Since the present thesis focuses on attosecond pump–probe spectroscopy with pulse durations of a few femtoseconds and delay times within several tens of femtoseconds, the key observables lie predominantly within this coherent validity window. RT-TDDFT as implemented in SALMON is therefore well suited to capture the essential physics addressed in this work.

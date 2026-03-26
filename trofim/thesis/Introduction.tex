@@ -1,0 +1,64 @@
+\chapter{Introduction}
+% \label{chap:intro}
+
+
+Attosecond optical spectroscopy has opened an unprecedented window into the real-time motion of electrons in matter, enabling direct observation of electronic excitations, charge migration, and correlation-driven dynamics on their natural timescale (10--1000~attoseconds). Over the past decade, techniques such as attosecond transient absorption spectroscopy (ATAS), high-harmonic spectroscopy (HHS), and time-resolved photoemission have revealed rich sub-femtosecond phenomena in atoms, molecules, and crystalline solids. However, despite this rapid progress, the attosecond response of \emph{disordered media} — including liquids, amorphous solids, polymers, and structurally complex hybrid materials — remains far less explored.
+
+Disordered systems are ubiquitous in both natural and technological contexts. Their electronic structure is shaped not only by average bonding environments, but also by stochastic fluctuations of local potentials, short-range structural disorder
+% enhanced scattering rates ?
+and localization effects. These features strongly influence ultrafast electron dynamics: they modify mean free paths, induce rapid dephasing, and lead to spatially heterogeneous excitation pathways. Because many relevant photophysical and photochemical processes — photoinduced charge transfer, interfacial electron injection, initial steps of bond rearrangements — occur in such irregular environments, understanding attosecond-scale dynamics in disordered media is essential for accurate interpretation of measurements and rational materials design.
+
+Recent experimental studies have demonstrated that attosecond techniques are indeed sensitive to disorder-induced scattering. High-harmonic spectroscopy in liquids has been shown to encode electron mean free paths and dephasing rates in the shape and phase of the emitted harmonics \cite{Mondal2023LiquidHHS}. Attosecond measurements in solids have captured ultrafast modifications of the band structure during strong-field excitation \cite{Schultze2014Si}. These results motivate the development of quantitative, predictive theoretical frameworks capable of describing attosecond processes in non-crystalline environments.
+
+
+
+
+
+As will be shown below, incorporating structural disorder in simulations naturally gives rise to ultrafast electronic dephasing, a process that plays a central role in attosecond experiments. Independent experimental evidence for such rapid relaxation already exists in ultrafast spectroscopy of crystalline materials. Phase-resolved transient absorption measurements in silicon driven by sub-5-fs excitation pulses reveal extremely rapid carrier dynamics, including single-electron momentum relaxation times of approximately $10$~fs and Drude collision times that reach only a few femtoseconds at the earliest delays. These experiments further report a transiently evolving optical effective mass during the initial stages of carrier relaxation, highlighting the strongly time-dependent character of electronic transport immediately following photoexcitation \cite{Worle2021}.
+
+Direct information about electronic coherence can also be obtained from high-harmonic spectroscopy. High-harmonic polarimetry measurements in strongly driven two-dimensional materials demonstrate that the polarization state of the emitted harmonics encodes the underlying electron--hole coherence. From these measurements, an electron--hole dephasing time $T_2$ of only a few femtoseconds was extracted \cite{Heide:22}. Although performed in a different material platform, these results provide compelling evidence that HHG observables can be governed by femtosecond-scale coherence loss.
+
+The necessity of such short coherence times is also well established in theoretical descriptions of solid-state high-harmonic generation. Reciprocal-space simulations typically require phenomenological dephasing times on the order of a few femtoseconds in order to reproduce experimentally observed harmonic spectra. Recent work has clarified the physical origin of these apparently extreme parameters by analyzing HHG dynamics in real space: strong dephasing suppresses recombination events involving large electron--hole separations and thereby eliminates unrealistically large contributions from long electron trajectories \cite{PhysRevResearch.6.043005}.
+
+Complementary modeling strategies introduce explicit decoherence mechanisms into strong-field simulations, for example through phenomenological imaginary potentials that mimic scattering-induced coherence loss. Such approaches successfully reproduce key experimental trends in solid-state HHG and further demonstrate that femtosecond-scale decoherence constitutes a critical control parameter governing the nonlinear optical response of strongly driven solids \cite{PhysRevA.103.063109}.
+
+Taken together, these experimental and theoretical studies indicate that ultrafast dephasing and scattering are intrinsic features of strongly driven electronic systems rather than merely phenomenological modeling parameters. In structurally disordered media, where fluctuations of the local potential introduce additional scattering channels and spatially heterogeneous electronic environments, coherence loss is expected to become even more pronounced. Accurately describing these processes therefore represents a central challenge for theoretical treatments of attosecond spectroscopy in non-crystalline materials.
+
+
+
+
+
+
+
+
+From a theoretical perspective, modeling attosecond optical responses of disordered systems requires a method that simultaneously accounts for (i) nonperturbative, real-time electronic dynamics and (ii) the explicit atomic-scale complexity of the medium. Real-time time-dependent density functional theory (RT-TDDFT) satisfies these requirements and has become a central tool for first-principles simulations of strong-field and attosecond phenomena in both molecules and solids. RT-TDDFT allows direct propagation of the electronic state in time, naturally capturing nonlinear responses, transient absorption signals, and high-harmonic emission. However, applying RT-TDDFT to disordered media remains challenging because of the need for large supercells, ensemble averaging over structural configurations, and the treatment of ultrafast scattering and decoherence — effects that are either absent or strongly suppressed in periodic crystals.
+
+% Recent method-development papers \cite{SATO2021110274, Moitra2023CoreTDDFT} highlight the importance of improving exchange–correlation functionals, incorporating relativistic effects for core-level spectroscopy, and developing multiscale strategies that combine first-principles propagation with effective models for dissipation. However, a systematic and quantitative RT-TDDFT framework for attosecond spectroscopy of disordered materials has not been fully established.
+
+\textbf{The objective of this thesis} is therefore to develop, validate, and apply a real-time TDDFT-based methodology for attosecond optical spectroscopy of disordered media. This includes constructing representative structural ensembles, implementing appropriate averaging procedures, computing ATAS and HHS observables, and identifying spectral signatures of disorder such as enhanced scattering,
+% localization, 
+ultrafast dephasing and relaxation. By comparing theoretical predictions with available experimental results, this work aims to clarify the microscopic origin of attosecond signals in non-crystalline environments and to provide practical guidelines for future attosecond spectroscopy of complex materials.
+
+
+
+
+
+\section{Thesis Structure}
+\label{sec:outline}
+
+
+This thesis is organized to provide a systematic progression from theoretical foundations to microscopic modeling and, ultimately, to the analysis of ultrafast observables in disordered silicon.
+
+Chapter~\ref{chap:tddft} introduces the real-time time-dependent density functional theory (RT-TDDFT) framework that underlies all simulations presented in this work. The time-dependent Kohn–Sham formalism, exchange–correlation approximations, and the implementation within the SALMON code are described in detail. The temporal validity window of RT-TDDFT for attosecond pump–probe spectroscopy in solids is also discussed, clarifying which physical processes are captured within a mean-field description and which require methods beyond adiabatic TDDFT.
+
+Chapter~\ref{chap:disorder} is devoted to structural disorder. Different models of displacement and amorphous disorder are introduced, together with their implementation in supercell simulations. The relationship between structural fluctuations, modification of the electronic potential landscape, and elastic scattering processes is established, forming the basis for the later analysis of transport and coherence decay.
+
+Chapter~\ref{chap:silicon} focuses on silicon as the material platform for this study. Its crystal structure and band structure are reviewed, with particular emphasis on symmetry properties near the $\Gamma$ point. The second part of this chapter presents a detailed analysis of the electronic density of states (DOS) under increasing disorder, highlighting band-gap renormalization, smoothing of van Hove singularities, and the emergence of exponential band-edge tails.
+
+Having established the structural and electronic groundwork, Chapter~\ref{chap:photoinjection} investigates ultrafast carrier photoinjection induced by few-femtosecond pump pulses. By systematically varying photon energy and disorder strength, different excitation regimes — from strongly nonlinear multiphoton processes to single-photon interband transitions — are identified and connected to the evolving band structure.
+
+Chapter~\ref{chap:probe} analyzes current dynamics during the probe pulse in an orthogonal pump–probe configuration. This setup enables a clear separation between carrier generation and transport. The probe-induced intraband current is described within a generalized Drude framework, allowing extraction of the momentum relaxation time and examination of effective-mass variations in reciprocal space.
+
+Chapter~\ref{chap:cco} examines coherent current oscillations (CCO) in the field-free regime following the pump pulse. Using a semiconductor Bloch equation perspective combined with autocorrelation-based coherence analysis, homogeneous (scattering-induced) and inhomogeneous (dispersion-induced) dephasing mechanisms are disentangled. A quantitative link between transport relaxation time and homogeneous coherence decay is established.
+
+Finally, Chapter~\ref{chap:discussion} integrates the results of all previous chapters. A unified physical picture is developed in which density-of-states modification, photoinjection efficiency, transport relaxation, and coherence decay are shown to originate from the same disorder-induced potential fluctuations. The broader implications for attosecond spectroscopy and ultrafast solid-state physics are discussed.

@@ -1,0 +1,70 @@
+\documentclass[color, unicode, hidelinks]{tumphthesis}
+
+\usepackage{duckuments}
+\usepackage{epigraph}
+\usepackage{lipsum}
+
+\usepackage[a4paper,
+            left=2.5cm,
+            right=2.3cm,
+            top=2.5cm,
+            bottom=2.5cm]{geometry}
+
+% \usepackage[hidelinks]{hyperref}
+
+\thesistitle
+{Attosecond optical spectroscopy of disordered media}
+{Der Titel meiner Magisterarbeit}
+\thesisauthor{Ruzaikin Trofim}{Author}
+% \thesisdate{2026}{3}{2}
+\supervisor{Prof. Dr. Vladislav Yakovlev}
+% \examiner{Prof. Dr. }
+% \date{March 2, 2026}
+
+
+
+\begin{document}
+
+\maketitle
+% \copyrightpage
+
+\abstractpage
+\input{abstract}
+
+\tableofcontents
+
+\mainmatter\setcounter{page}{1}
+\include{Introduction}
+\include{TDDFT}
+\include{Disorder}
+\include{Si}
+\include{Photoinjection} 
+\include{Probe_dynamics} 
+\include{CCO}
+
+\include{Discussions}
+
+
+% \include{Convergence}
+
+\appendix
+
+\include{app1}
+
+% \addcontentsline{toc}{chapter}{\protect Bibliography}
+\bibliography{library}
+
+% \addcontentsline{toc}{chapter}{\protect List of Figures}
+% \listoffigures
+
+% \addcontentsline{toc}{chapter}{\protect List of Tables}
+% \listoftables
+
+% \acknowledgments
+% \input{acknowledgements}
+
+
+
+
+
+\end{document}
