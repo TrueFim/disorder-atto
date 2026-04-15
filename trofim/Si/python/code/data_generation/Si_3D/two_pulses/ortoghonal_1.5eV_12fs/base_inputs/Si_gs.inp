@@ -36,8 +36,8 @@
   
   
   nproc_ob=8
-  nproc_rgrid=2,4,2
-  nproc_k=1
+  nproc_rgrid=2,2,2
+  nproc_k=8
 /
 
 &system
