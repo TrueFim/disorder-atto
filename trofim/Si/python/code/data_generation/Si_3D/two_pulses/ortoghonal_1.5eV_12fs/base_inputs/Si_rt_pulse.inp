@@ -39,9 +39,9 @@
   yn_ffte = 'y'
   
   
-  nproc_ob=4
-  nproc_rgrid=3,2,3
-  nproc_k=125
+  nproc_ob=8
+  nproc_rgrid=2,4,2
+  nproc_k=1
 /
 
 &system
