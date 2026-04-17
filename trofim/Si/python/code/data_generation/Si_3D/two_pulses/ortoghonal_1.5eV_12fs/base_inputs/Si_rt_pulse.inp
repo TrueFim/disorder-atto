@@ -40,8 +40,8 @@
   
   
   nproc_ob=4
-  nproc_rgrid=3,3,2
-  nproc_k=18
+  nproc_rgrid=1,1,1
+  nproc_k=100
 /
 
 &system
@@ -133,8 +133,6 @@
   de      = 0.01d0
   nenergy = 3000
   
-  projection_option = 'td'
-  out_projection_step = 16000
 /
 
 &atomic_red_coor
