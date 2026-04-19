@@ -1,0 +1,6 @@
+# Excitation
+# nelec: Number of excited electrons
+# nhole: Number of excited holes
+# 1:time[fs] 2:nelec[none] 3:nhole[none]
+  0.200000000000000E-002  0.445674486794358E-014  0.278162133326987E-007
+  0.300000000000000E+002  0.103444746770786E+002  0.103461007159466E+002
